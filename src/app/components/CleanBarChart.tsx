@@ -34,10 +34,8 @@ const generateAllDailyData = () => {
     // 4월은 "1일", "2일", ...
     // 5월 1일만 "5월 1일", 그 이후는 "2일", "3일", ...
     let label;
-    if (month === 4) {
-      label = `${day}일`;
-    } else if (month === 5 && day === 1) {
-      label = `5월 1일`;
+    if (day === 1) {
+      label = `${month}월 ${day}일`;
     } else {
       label = `${day}일`;
     }
@@ -57,7 +55,8 @@ const allDailyData = generateAllDailyData();
 export function CleanBarChart() {
   const [viewMode, setViewMode] = useState<'monthly' | 'daily'>('monthly');
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [monthlyPage, setMonthlyPage] = useState(0);
+  // 현재 월(4월 = 인덱스 3)이 포함된 페이지 (6개월씩 나눔)
+  const [monthlyPage, setMonthlyPage] = useState(() => Math.floor(3 / 6));
   const [dailyPage, setDailyPage] = useState(0);
   const [animKey, setAnimKey] = useState(0);
 
@@ -148,7 +147,7 @@ export function CleanBarChart() {
               <span className="text-sm text-[#868E96] font-medium">{periodLabel}</span>
             </div>
             <p className="text-sm text-[#868E96]">
-              월별 구매 금액 추이
+              {viewMode === 'monthly' ? '월별' : '일별'} 구매 금액 추이 (단위: 백만원)
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -183,6 +182,7 @@ export function CleanBarChart() {
                   <button
                     onClick={() => {
                       setViewMode('monthly');
+                      setMonthlyPage(Math.floor(3 / 6)); // 현재 월(4월=인덱스3) 페이지로
                       setDropdownOpen(false);
                       triggerAnim();
                     }}
@@ -195,6 +195,12 @@ export function CleanBarChart() {
                   <button
                     onClick={() => {
                       setViewMode('daily');
+                      // 현재 날짜(4월 14일 = 인덱스 13)가 포함된 페이지로 이동
+                      const todayIndex = allDailyData.findIndex((_, i) => {
+                        const date = new Date(2026, 3, 1 + i);
+                        return date.getTime() === new Date(2026, 3, 14).getTime();
+                      });
+                      setDailyPage(Math.floor(todayIndex / 7));
                       setDropdownOpen(false);
                       triggerAnim();
                     }}

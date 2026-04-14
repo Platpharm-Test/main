@@ -102,7 +102,7 @@ export function CleanTable() {
           </colgroup>
           <thead className="bg-[#F8F9FA]">
             <tr>
-              <th className="px-6 py-4 text-left text-xs font-bold text-[#495057]">경과구분</th>
+              <th className="px-6 py-4 text-left text-xs font-bold text-[#495057]">유형</th>
               <th className="px-6 py-4 text-left text-xs font-bold text-[#495057]">공급사</th>
               <th className="px-6 py-4 text-left text-xs font-bold text-[#495057]">의약품명</th>
               <th className="px-6 py-4 text-left text-xs font-bold text-[#495057]">주문일</th>

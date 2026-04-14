@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { useState } from 'react';
 
 const menuSections = [
@@ -11,7 +11,7 @@ const menuSections = [
   {
     title: '거래처 관리',
     items: [
-      { name: '거래 신청' },
+      { name: '거래 신청 내역' },
       { name: '승인된 공급사' },
     ]
   },
@@ -54,7 +54,7 @@ const menuSections = [
   },
 ];
 
-export function CleanSidebar() {
+export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>({
     0: true,
     1: true,
@@ -66,10 +66,20 @@ export function CleanSidebar() {
   };
 
   return (
-    <aside className="w-56 bg-white border-r border-[#DEE2E6] h-screen fixed left-0 top-14 flex flex-col">
-      <div className="p-5" />
+    <aside className={`${collapsed ? '-translate-x-full' : 'translate-x-0'} w-56 bg-white border-r border-[#DEE2E6] h-screen fixed left-0 top-14 flex flex-col transition-transform duration-300`}>
+      {/* 접기/펼치기 버튼 - 사이드바 바깥 오른쪽 */}
+      <button
+        onClick={onToggle}
+        className="absolute top-0 -right-8 w-8 h-8 bg-white border-b border-l border-r border-[#DEE2E6] rounded-br-md flex items-center justify-center hover:bg-[#F8F9FA] transition-colors z-10"
+      >
+        {collapsed ? (
+          <ChevronsRight className="w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+        ) : (
+          <ChevronsLeft className="w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+        )}
+      </button>
 
-      <nav className="flex-1 px-3 overflow-y-auto">
+      <nav className="flex-1 px-3 pt-4 overflow-y-auto">
         {menuSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className="mb-4">
             <button

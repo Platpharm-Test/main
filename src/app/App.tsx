@@ -4,21 +4,31 @@ import { CleanBarChart } from './components/CleanBarChart';
 import { CleanTable } from './components/CleanTable';
 import { StatCard } from './components/StatCard';
 import { CompanyList } from './components/CompanyList';
-import { ShoppingCart, Settings } from 'lucide-react';
+import { useState } from 'react';
+
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour < 12) return '안녕하세요, 좋은 아침입니다!';
+  if (hour >= 12 && hour < 14) return '안녕하세요, 좋은 점심입니다!';
+  if (hour >= 14 && hour < 18) return '안녕하세요, 좋은 오후입니다!';
+  return '안녕하세요, 좋은 밤입니다!';
+}
 
 export default function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
   return (
     <div className="min-h-screen bg-white">
       <CleanHeader />
-      <CleanSidebar />
+      <CleanSidebar collapsed={!sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
-      <main className="ml-56 mt-14 p-8">
+      <main className={`${sidebarOpen ? 'ml-56' : 'ml-0'} mt-14 p-8 transition-all duration-300`}>
         <div className="max-w-[1400px] mx-auto">
           {/* Page Header */}
           <div className="mb-6 flex items-end justify-between">
             <div>
-              <p className="text-sm text-[#868E96] mb-1">안녕하세요!</p>
+              <p className="text-sm text-[#868E96] mb-1">{getGreeting()}</p>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold text-[#212529]">서울연세의원님</h2>
                 <span className="px-2.5 py-1 bg-[#EDF2FF] text-[#4E7FFF] text-xs font-semibold rounded">병/의원 의사</span>
@@ -66,53 +76,6 @@ export default function App() {
           {/* Transaction Table - Full Width */}
           <div className="mb-6">
             <CleanTable />
-          </div>
-
-          {/* Ledger Section */}
-          <div className="mb-6">
-            <div className="bg-white rounded-lg border border-[#DEE2E6] p-6">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <h3 className="text-base font-bold text-[#212529] mb-0.5">구매 장부</h3>
-                  <p className="text-sm text-[#868E96]">구매 내역 및 결제 현황</p>
-                </div>
-                <button className="text-sm text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors">
-                  전체 보기
-                </button>
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                {/* 이번 주 구매액 */}
-                <div className="bg-[#F8F9FA] rounded-lg p-4">
-                  <p className="text-xs text-[#868E96] font-medium mb-2">이번 주 구매액</p>
-                  <p className="text-xl font-bold text-[#212529] mb-1">₩1.58억</p>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-semibold text-[#40C057]">+12.3%</span>
-                    <span className="text-xs text-[#ADB5BD]">전주 대비</span>
-                  </div>
-                </div>
-
-                {/* 이번 달 구매액 */}
-                <div className="bg-[#F8F9FA] rounded-lg p-4">
-                  <p className="text-xs text-[#868E96] font-medium mb-2">이번 달 구매액</p>
-                  <p className="text-xl font-bold text-[#212529] mb-1">₩6.25억</p>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-semibold text-[#40C057]">+8.7%</span>
-                    <span className="text-xs text-[#ADB5BD]">전월 대비</span>
-                  </div>
-                </div>
-
-                {/* 미결제 금액 */}
-                <div className="bg-[#FFF5F5] rounded-lg p-4">
-                  <p className="text-xs text-[#868E96] font-medium mb-2">미결제 금액</p>
-                  <p className="text-xl font-bold text-[#FA5252] mb-1">₩1,245만</p>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-semibold text-[#FA5252]">3건</span>
-                    <span className="text-xs text-[#ADB5BD]">결제 기한 임박</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Company List */}

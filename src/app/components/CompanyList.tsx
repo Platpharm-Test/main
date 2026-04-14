@@ -50,7 +50,7 @@ export function CompanyList() {
                 <td className="py-4 text-center">
                   <span className={`text-xs font-semibold px-2 py-1 rounded ${
                     company.status === '활성'
-                      ? 'bg-[#D3F9D8] text-[#2B8A3E]'
+                      ? 'bg-[#EDF2FF] text-[#4E7FFF]'
                       : 'bg-[#FFE3E3] text-[#C92A2A]'
                   }`}>
                     {company.status}
@@ -59,7 +59,7 @@ export function CompanyList() {
                 <td className="py-4 text-right text-sm text-[#495057]">{company.orders}건</td>
                 <td className="py-4 text-right text-sm font-bold text-[#212529]">{company.amount}</td>
                 <td className="py-4 text-right">
-                  <span className={`text-sm font-semibold ${company.trend.startsWith('+') ? 'text-[#40C057]' : 'text-[#FA5252]'}`}>
+                  <span className={`text-sm font-semibold ${company.trend.startsWith('+') ? 'text-[#4E7FFF]' : 'text-[#FA5252]'}`}>
                     {company.trend}
                   </span>
                 </td>
