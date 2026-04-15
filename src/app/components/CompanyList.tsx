@@ -16,9 +16,9 @@ export function CompanyList() {
           <h3 className="text-base font-bold text-[#212529]">공급사 거래 현황</h3>
           <p className="text-sm text-[#868E96] mt-1">거래 금액 기준 상위 공급사</p>
         </div>
-        <button className="group flex items-center gap-1 text-sm text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors">
-          전체 보기
-          <svg className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+        <button className="flex items-center gap-1 text-sm text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors cursor-pointer">
+          전체보기
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>

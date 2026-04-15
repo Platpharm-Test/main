@@ -76,7 +76,7 @@ export function FeatureDonutCard({
   }, [percentage]);
 
   return (
-    <div className="group bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6 cursor-pointer">
+    <div className="group bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6">
       <div className="flex gap-6">
         {/* 좌측: 제목 + 도넛 + 레전드 */}
         <div className="flex-1 flex flex-col items-center">
@@ -151,12 +151,12 @@ export function FeatureDonutCard({
           <div className="mb-3">
             <div className="flex items-center justify-between">
               <h4 className="text-sm font-bold text-[#212529]">{rightTitle}</h4>
-              <div className="flex items-center gap-1 text-xs font-semibold text-[#4E7FFF] group-hover:text-[#3D6FEF] transition-colors">
+              <button className="flex items-center gap-1 text-xs font-semibold text-[#4E7FFF] hover:text-[#3D6FEF] transition-colors cursor-pointer">
                 바로가기
-                <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
-              </div>
+              </button>
             </div>
             <p className="text-[11px] text-[#ADB5BD] mt-0.5">{rightSubtitle}</p>
           </div>

@@ -128,7 +128,7 @@ export function AlertList() {
 
       {/* 푸터 */}
       <div className="mt-3 pt-3 border-t border-[#F1F3F5] flex justify-center">
-        <button className="text-xs text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors inline-flex items-center gap-1">
+        <button className="text-xs text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors inline-flex items-center gap-1 cursor-pointer">
           전체 재고 보기
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
