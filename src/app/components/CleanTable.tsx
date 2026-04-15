@@ -94,9 +94,9 @@ export function CleanTable() {
       <div className="px-6 pb-6">
         <table className="w-full table-fixed">
           <colgroup>
-            <col style={{ width: '8%' }} />
+            <col style={{ width: '10%' }} />
             <col style={{ width: '11%' }} />
-            <col style={{ width: '27%' }} />
+            <col style={{ width: '25%' }} />
             <col style={{ width: '9%' }} />
             <col style={{ width: '10%' }} />
             <col style={{ width: '11%' }} />

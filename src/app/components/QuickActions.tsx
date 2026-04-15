@@ -1,8 +1,7 @@
-import ReplayIcon from '@mui/icons-material/Replay';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import HandshakeIcon from '@mui/icons-material/Handshake';
 import AddIcon from '@mui/icons-material/Add';
 import { useState, type ReactNode } from 'react';
 
@@ -15,14 +14,14 @@ interface Action {
 
 const actions: Action[] = [
   {
-    icon: <ReplayIcon fontSize="inherit" />,
-    label: '재주문',
+    icon: <ShoppingCartIcon fontSize="inherit" />,
+    label: '주문하기',
     iconBg: 'bg-[#EDF2FF]',
     iconColor: 'text-[#4E7FFF]',
   },
   {
     icon: <ReceiptLongIcon fontSize="inherit" />,
-    label: '영수증 발급',
+    label: '세금계산서/거래명세서',
     iconBg: 'bg-[#E6FCF5]',
     iconColor: 'text-[#0CA678]',
   },
@@ -31,12 +30,6 @@ const actions: Action[] = [
     label: '반품 신청',
     iconBg: 'bg-[#FFF4E6]',
     iconColor: 'text-[#F76707]',
-  },
-  {
-    icon: <HandshakeIcon fontSize="inherit" />,
-    label: '거래 신청',
-    iconBg: 'bg-[#F3F0FF]',
-    iconColor: 'text-[#7048E8]',
   },
   {
     icon: <SupportAgentIcon fontSize="inherit" />,
@@ -54,7 +47,7 @@ export function QuickActions() {
       {/* 어두운 오버레이 - 클릭 시 닫힘 */}
       <div
         onClick={() => setOpen(false)}
-        className="fixed inset-0 z-30 bg-black/40 transition-opacity duration-300"
+        className="fixed inset-0 z-30 bg-black/50 transition-opacity duration-300"
         style={{
           opacity: open ? 1 : 0,
           pointerEvents: open ? 'auto' : 'none',
@@ -83,7 +76,7 @@ export function QuickActions() {
             aria-label={action.label}
             className="w-14 h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center hover:scale-105 transition-transform"
           >
-            <span className="text-[#212529] inline-flex" style={{ fontSize: '24px' }}>
+            <span className="text-[#444444] inline-flex" style={{ fontSize: '24px' }}>
               {action.icon}
             </span>
           </button>
