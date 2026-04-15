@@ -79,7 +79,7 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
       <button
         onClick={onToggle}
         aria-label={collapsed ? '사이드바 펼치기' : '사이드바 접기'}
-        className="hidden lg:flex absolute top-0 -right-8 w-8 h-8 bg-[#2B2D31] border-b border-l border-r border-[#1A1C1F] rounded-br-md items-center justify-center hover:bg-white/10 transition-colors z-10 cursor-pointer"
+        className="hidden lg:flex absolute top-0 -right-8 w-8 h-8 bg-[#2B2D31] hover:bg-[#3A3D42] border-b border-l border-r border-[#1A1C1F] rounded-br-md items-center justify-center transition-colors z-10 cursor-pointer"
       >
         {collapsed ? (
           <ChevronsRight className="w-4 h-4 text-white/70" strokeWidth={2.5} />

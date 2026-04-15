@@ -55,7 +55,7 @@ export default function DashboardV2() {
                 <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-[#EDF2FF] text-[#4E7FFF] text-[10px] sm:text-xs font-semibold rounded">병/의원 의사</span>
               </div>
             </div>
-            <button className="w-full sm:w-auto h-14 sm:h-auto px-4 sm:px-5 sm:py-2.5 bg-[#4E7FFF] text-white text-sm font-semibold rounded-xl sm:rounded-lg hover:bg-[#3D6FEF] transition-colors cursor-pointer">
+            <button className="hidden sm:block sm:w-auto px-5 py-2.5 bg-[#4E7FFF] text-white text-sm font-semibold rounded-lg hover:bg-[#3D6FEF] transition-colors cursor-pointer">
               의약품 주문하기
             </button>
           </div>
@@ -63,6 +63,13 @@ export default function DashboardV2() {
           {/* 공지 스트립 */}
           <div className="mb-6">
             <NoticeStrip />
+          </div>
+
+          {/* 의약품 주문하기 (모바일 전용, 공지 아래) */}
+          <div className="sm:hidden mb-6">
+            <button className="w-full h-14 px-4 bg-[#4E7FFF] text-white text-sm font-semibold rounded-xl hover:bg-[#3D6FEF] transition-colors cursor-pointer">
+              의약품 주문하기
+            </button>
           </div>
 
           {/* Hero: 4 Feature Donut Cards */}
