@@ -11,10 +11,10 @@ const rankColors = ['bg-[#4E7FFF] text-white', 'bg-[#212529] text-white', 'bg-[#
 export function CompanyList() {
   return (
     <div className="bg-white rounded-lg border border-[#DEE2E6] overflow-hidden">
-      <div className="px-6 py-5 flex items-center justify-between">
-        <div>
+      <div className="px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <h3 className="text-base font-bold text-[#212529]">공급사 거래 현황</h3>
-          <p className="text-sm text-[#868E96] mt-1">거래 금액 기준 상위 공급사</p>
+          <p className="text-xs sm:text-sm text-[#868E96] mt-1">거래 금액 기준 상위 공급사</p>
         </div>
         <button className="flex items-center gap-1 text-sm text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors cursor-pointer">
           전체보기
@@ -24,8 +24,8 @@ export function CompanyList() {
         </button>
       </div>
 
-      <div className="px-6 pb-6">
-        <table className="w-full">
+      <div className="px-4 sm:px-6 pb-4 sm:pb-6 overflow-x-auto">
+        <table className="w-full min-w-[760px]">
           <thead className="bg-[#F8F9FA]">
             <tr>
               <th className="px-4 py-4 text-left text-xs font-bold text-[#495057] w-16">순위</th>

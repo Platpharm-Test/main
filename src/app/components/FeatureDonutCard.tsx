@@ -76,8 +76,8 @@ export function FeatureDonutCard({
   }, [percentage]);
 
   return (
-    <div className="group bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6">
-      <div className="flex gap-6">
+    <div className="group bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
         {/* 좌측: 제목 + 도넛 + 레전드 */}
         <div className="flex-1 flex flex-col items-center">
           {/* 제목 */}

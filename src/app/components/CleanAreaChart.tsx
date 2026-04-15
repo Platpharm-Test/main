@@ -97,14 +97,14 @@ export function CleanAreaChart() {
       })();
 
   return (
-    <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6 h-full">
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <span className="text-[#4E7FFF] inline-flex" style={{ fontSize: '20px' }}>
+    <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-4 sm:p-6 h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-5">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-[#4E7FFF] inline-flex shrink-0" style={{ fontSize: '20px' }}>
             <TrendingUpIcon fontSize="inherit" />
           </span>
-          <div>
-            <div className="flex items-center gap-2">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-sm font-bold text-[#212529]">구매 현황</h3>
               <span className="text-xs text-[#ADB5BD]">{periodLabel}</span>
             </div>
@@ -114,7 +114,7 @@ export function CleanAreaChart() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <div className="flex items-center border border-[#DEE2E6] rounded-lg overflow-hidden">
             <button onClick={handlePrev} className="p-2 hover:bg-[#F8F9FA] transition-colors">
               <ChevronLeft className="w-3.5 h-3.5 text-[#868E96]" strokeWidth={2.5} />
@@ -164,7 +164,7 @@ export function CleanAreaChart() {
         </div>
       </div>
 
-      <div className="w-full h-64" key={animKey}>
+      <div className="w-full h-56 sm:h-64" key={animKey}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
             <defs>

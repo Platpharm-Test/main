@@ -42,12 +42,12 @@ export function NoticeStrip() {
   const list = [...notices, notices[0]];
 
   return (
-    <div className="bg-[#2B2D31] rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-5 h-14 flex items-center gap-4">
+    <div className="bg-[#2B2D31] rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-4 sm:px-5 h-14 flex items-center gap-3 sm:gap-4">
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-[#4E7FFF] inline-flex" style={{ fontSize: '20px' }}>
           <CampaignIcon fontSize="inherit" />
         </span>
-        <span className="text-sm font-bold text-white">공지사항</span>
+        <span className="hidden sm:inline text-sm font-bold text-white">공지사항</span>
       </div>
 
       {/* 티커 컨테이너 */}

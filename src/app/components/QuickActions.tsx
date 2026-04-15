@@ -69,7 +69,7 @@ export function QuickActions() {
             transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         >
-          <span className="text-white text-base font-bold whitespace-nowrap drop-shadow-md">
+          <span className="text-white text-sm sm:text-base font-bold whitespace-nowrap drop-shadow-md">
             {action.label}
           </span>
           <button

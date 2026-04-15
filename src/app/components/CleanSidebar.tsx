@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight, LogOut } from 'lucide-react';
 import { useState } from 'react';
 
 const menuSections = [
@@ -66,32 +66,74 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
   };
 
   return (
-    <aside className={`${collapsed ? '-translate-x-full' : 'translate-x-0'} w-56 bg-white border-r border-[#DEE2E6] h-screen fixed left-0 top-14 flex flex-col transition-transform duration-300`}>
-      {/* 접기/펼치기 버튼 - 사이드바 바깥 오른쪽 */}
+    <aside
+      className={`
+        ${collapsed ? 'translate-x-full lg:-translate-x-full' : 'translate-x-0'}
+        fixed top-14 bottom-0 right-0 lg:left-0 lg:right-auto
+        w-full lg:w-56
+        bg-[#2B2D31] border-l lg:border-l-0 lg:border-r border-[#1A1C1F]
+        flex flex-col transition-transform duration-300 z-40
+      `}
+    >
+      {/* 데스크탑 접기/펼치기 버튼 */}
       <button
         onClick={onToggle}
-        className="absolute top-0 -right-8 w-8 h-8 bg-white border-b border-l border-r border-[#DEE2E6] rounded-br-md flex items-center justify-center hover:bg-[#F8F9FA] transition-colors z-10"
+        aria-label={collapsed ? '사이드바 펼치기' : '사이드바 접기'}
+        className="hidden lg:flex absolute top-0 -right-8 w-8 h-8 bg-[#2B2D31] border-b border-l border-r border-[#1A1C1F] rounded-br-md items-center justify-center hover:bg-white/10 transition-colors z-10 cursor-pointer"
       >
         {collapsed ? (
-          <ChevronsRight className="w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+          <ChevronsRight className="w-4 h-4 text-white/70" strokeWidth={2.5} />
         ) : (
-          <ChevronsLeft className="w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+          <ChevronsLeft className="w-4 h-4 text-white/70" strokeWidth={2.5} />
         )}
       </button>
 
-      <nav className="flex-1 px-3 pt-4 overflow-y-auto">
+      {/* 모바일 사용자 정보 */}
+      <div className="lg:hidden flex items-center gap-2 px-5 py-4 border-b border-white/10">
+        <span className="text-sm font-bold text-white">서울연세의원님</span>
+        <span className="px-2 py-0.5 bg-[#4E7FFF]/20 text-[#8BADFF] text-[10px] font-semibold rounded">병/의원 의사</span>
+      </div>
+
+      {/* 모바일: 섹션 제목 + 플랫 리스트 */}
+      <nav className="lg:hidden flex-1 overflow-y-auto pb-4">
+        {menuSections.map((section, sectionIndex) => (
+          <div key={sectionIndex} className="pt-5">
+            <p className="px-5 pb-2 text-[11px] text-white/40 font-medium">{section.title}</p>
+            <div>
+              {section.items.map((item, itemIndex) => (
+                <button
+                  key={itemIndex}
+                  className={`
+                    w-full flex items-center justify-between px-5 py-4 transition-colors cursor-pointer
+                    ${item.active
+                      ? 'bg-white/5 text-[#8BADFF] font-bold'
+                      : 'text-white hover:bg-white/5 font-bold'
+                    }
+                  `}
+                >
+                  <span className="text-sm">{item.name}</span>
+                  <ChevronRight className="w-4 h-4 text-white/40" strokeWidth={2} />
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      {/* 데스크탑: 기존 접기/펼치기 리스트 */}
+      <nav className="hidden lg:block flex-1 px-3 pt-4 overflow-y-auto">
         {menuSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className="mb-4">
             <button
               onClick={() => toggleSection(sectionIndex)}
-              className="w-full flex items-center justify-between px-3 py-2 text-sm font-bold text-[#495057] hover:text-[#212529] transition-colors"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm font-bold text-white/90 hover:text-white transition-colors cursor-pointer"
             >
               <span>{section.title}</span>
               {section.items.length > 0 && (
                 expandedSections[sectionIndex] ? (
-                  <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <ChevronDown className="w-3.5 h-3.5 text-white/60" strokeWidth={2.5} />
                 ) : (
-                  <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  <ChevronRight className="w-3.5 h-3.5 text-white/60" strokeWidth={2.5} />
                 )
               )}
             </button>
@@ -101,10 +143,10 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
                   <button
                     key={itemIndex}
                     className={`
-                      w-full flex items-center px-3 py-2 rounded-md text-xs transition-colors
+                      w-full flex items-center px-3 py-2 rounded-md text-xs transition-colors cursor-pointer
                       ${item.active
-                        ? 'bg-[#EDF2FF] text-[#4E7FFF] font-semibold'
-                        : 'text-[#868E96] hover:bg-[#F8F9FA] hover:text-[#495057] font-medium'
+                        ? 'bg-[#4E7FFF]/20 text-[#8BADFF] font-semibold'
+                        : 'text-white/60 hover:bg-white/10 hover:text-white/90 font-medium'
                       }
                     `}
                   >
@@ -116,6 +158,14 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
           </div>
         ))}
       </nav>
+
+      {/* 모바일 로그아웃 */}
+      <div className="lg:hidden border-t border-white/10 px-5 py-4">
+        <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/20 text-sm font-semibold text-white/90 hover:bg-white/10 transition-colors cursor-pointer">
+          <LogOut className="w-4 h-4" strokeWidth={2} />
+          로그아웃
+        </button>
+      </div>
     </aside>
   );
 }

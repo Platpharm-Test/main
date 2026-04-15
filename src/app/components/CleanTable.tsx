@@ -78,10 +78,10 @@ const statusStyles: Record<string, string> = {
 export function CleanTable() {
   return (
     <div className="bg-white rounded-lg border border-[#DEE2E6] overflow-hidden">
-      <div className="px-6 py-5 flex items-center justify-between">
-        <div>
+      <div className="px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <h3 className="text-base font-bold text-[#212529]">주문 내역</h3>
-          <p className="text-sm text-[#868E96] mt-1">최근 주문 및 배송 현황</p>
+          <p className="text-xs sm:text-sm text-[#868E96] mt-1">최근 주문 및 배송 현황</p>
         </div>
         <button className="flex items-center gap-1 text-sm text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors cursor-pointer">
           전체보기
@@ -91,8 +91,8 @@ export function CleanTable() {
         </button>
       </div>
 
-      <div className="px-6 pb-6">
-        <table className="w-full table-fixed">
+      <div className="px-4 sm:px-6 pb-4 sm:pb-6 overflow-x-auto">
+        <table className="w-full table-fixed min-w-[900px]">
           <colgroup>
             <col style={{ width: '10%' }} />
             <col style={{ width: '11%' }} />
