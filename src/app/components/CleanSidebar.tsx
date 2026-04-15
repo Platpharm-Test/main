@@ -95,7 +95,10 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
       </div>
 
       {/* 모바일: 섹션 제목 + 플랫 리스트 */}
-      <nav className="lg:hidden flex-1 overflow-y-auto pb-4">
+      <nav
+        className="lg:hidden flex-1 overflow-y-auto pb-4 [&::-webkit-scrollbar]:hidden"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         {menuSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className="pt-5">
             <p className="px-5 pb-2 text-[11px] text-white/40 font-medium">{section.title}</p>
