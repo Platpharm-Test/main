@@ -1,106 +1,167 @@
-import { CheckCircle2, Clock, XCircle, AlertCircle, Package, FileText } from 'lucide-react';
+import HistoryIcon from '@mui/icons-material/History';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import PaidIcon from '@mui/icons-material/Paid';
+import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { ChevronRight } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
 
-const activities = [
+type Category = '전체' | '주문' | '배송' | '결제' | '반품';
+
+interface Activity {
+  time: string;
+  icon: ReactNode;
+  iconBg: string;
+  iconColor: string;
+  category: Exclude<Category, '전체'>;
+  title: string;
+  detail: string;
+}
+
+const activities: Activity[] = [
   {
-    id: 1,
-    type: 'success',
-    icon: CheckCircle2,
-    title: '주문 #ORD-2451 승인 완료',
-    description: '메드코프 - 아스피린 100mg 외 3건',
-    time: '2분 전',
-    color: 'text-[#10B981]',
-    bg: 'bg-[#ECFDF5]',
+    time: '09:23',
+    icon: <LocalShippingIcon fontSize="inherit" />,
+    iconBg: 'bg-[#F3F0FF]',
+    iconColor: 'text-[#7048E8]',
+    category: '배송',
+    title: '배송 출발',
+    detail: '유한양행 · 리바푸라빈 디뮤코정',
   },
   {
-    id: 2,
-    type: 'pending',
-    icon: Clock,
-    title: '결제 대기 중',
-    description: '헬스플러스 - 청구서 #INV-8821',
-    time: '15분 전',
-    color: 'text-[#F59E0B]',
-    bg: 'bg-[#FEF3C7]',
+    time: '09:15',
+    icon: <PaidIcon fontSize="inherit" />,
+    iconBg: 'bg-[#EDF2FF]',
+    iconColor: 'text-[#4E7FFF]',
+    category: '결제',
+    title: '결제 완료',
+    detail: '₩3,400,000',
   },
   {
-    id: 3,
-    type: 'info',
-    icon: Package,
-    title: '재고 자동 주문',
-    description: '타이레놀 500mg - 200박스 발주',
-    time: '1시간 전',
-    color: 'text-[#3B82F6]',
-    bg: 'bg-[#DBEAFE]',
+    time: '08:47',
+    icon: <AssignmentReturnIcon fontSize="inherit" />,
+    iconBg: 'bg-[#FFF4E6]',
+    iconColor: 'text-[#F76707]',
+    category: '반품',
+    title: '반품 승인',
+    detail: '게보린 정 20개',
   },
   {
-    id: 4,
-    type: 'warning',
-    icon: AlertCircle,
-    title: '계약 갱신 알림',
-    description: '바이탈메드 - 7일 후 만료 예정',
-    time: '2시간 전',
-    color: 'text-[#F59E0B]',
-    bg: 'bg-[#FEF3C7]',
+    time: '08:30',
+    icon: <ShoppingCartIcon fontSize="inherit" />,
+    iconBg: 'bg-[#F3F0FF]',
+    iconColor: 'text-[#7048E8]',
+    category: '주문',
+    title: '주문 접수',
+    detail: '한미약품 · 파모큐정 20정',
   },
   {
-    id: 5,
-    type: 'error',
-    icon: XCircle,
-    title: '반품 요청',
-    description: '큐어파마 - 주문 #ORD-2448',
-    time: '3시간 전',
-    color: 'text-[#EF4444]',
-    bg: 'bg-[#FEE2E2]',
+    time: '08:12',
+    icon: <CheckCircleIcon fontSize="inherit" />,
+    iconBg: 'bg-[#E6FCF5]',
+    iconColor: 'text-[#0CA678]',
+    category: '주문',
+    title: '공급사 승인',
+    detail: '삼진제약 · 거래 시작',
   },
   {
-    id: 6,
-    type: 'success',
-    icon: FileText,
-    title: '계약 체결',
-    description: '글로벌헬스 - 연간 공급 계약',
-    time: '4시간 전',
-    color: 'text-[#10B981]',
-    bg: 'bg-[#ECFDF5]',
+    time: '07:45',
+    icon: <LocalShippingIcon fontSize="inherit" />,
+    iconBg: 'bg-[#F3F0FF]',
+    iconColor: 'text-[#7048E8]',
+    category: '배송',
+    title: '배송 완료',
+    detail: '대웅제약 · 미니베스트 디펙션성정',
   },
 ];
 
+const categories: Category[] = ['전체', '주문', '배송', '결제', '반품'];
+
 export function ActivityFeed() {
+  const [filter, setFilter] = useState<Category>('전체');
+
+  const filtered = (filter === '전체' ? activities : activities.filter((a) => a.category === filter)).slice(0, 4);
+  const totalCount = activities.length;
+
   return (
-    <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] hover:border-[#097969]/20 transition-all duration-500 h-full flex flex-col">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h3 className="text-lg font-bold text-[#1F2937] mb-1">최근 활동</h3>
-          <p className="text-sm text-[#6B7280]">실시간 시스템 업데이트</p>
+    <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-5 h-full flex flex-col">
+      {/* 헤더 */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <span className="text-[#4E7FFF] inline-flex" style={{ fontSize: '20px' }}>
+            <HistoryIcon fontSize="inherit" />
+          </span>
+          <h3 className="text-sm font-bold text-[#212529]">실시간 활동</h3>
         </div>
-        <button className="text-xs font-semibold text-[#097969] hover:text-[#075F54] transition-colors px-3 py-1.5 rounded-lg hover:bg-[#F0FDF9]">
-          전체 보기
-        </button>
+        <span className="text-xs text-[#868E96] font-medium">오늘 {totalCount}건</span>
       </div>
 
-      <div className="space-y-3 flex-1 overflow-y-auto">
-        {activities.map((activity, index) => {
-          const Icon = activity.icon;
+      {/* 필터 탭 */}
+      <div className="flex items-center gap-1.5 mb-4 flex-wrap">
+        {categories.map((cat) => {
+          const active = filter === cat;
           return (
-            <div
-              key={activity.id}
-              className="flex gap-3 p-3 rounded-xl hover:bg-[#F9FAFB] transition-all duration-300 cursor-pointer group border border-transparent hover:border-[#E5E7EB]"
-              style={{ animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both` }}
+            <button
+              key={cat}
+              onClick={() => setFilter(cat)}
+              className={`text-xs font-semibold px-2.5 py-1 rounded-full transition-colors ${
+                active
+                  ? 'bg-[#4E7FFF] text-white'
+                  : 'bg-[#F8F9FA] text-[#868E96] hover:bg-[#F1F3F5]'
+              }`}
             >
-              <div className={`w-10 h-10 rounded-xl ${activity.bg} flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110`}>
-                <Icon className={`w-5 h-5 ${activity.color}`} strokeWidth={2.5} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-[#1F2937] mb-0.5 truncate">
-                  {activity.title}
-                </p>
-                <p className="text-xs text-[#6B7280] mb-1 truncate">
-                  {activity.description}
-                </p>
-                <p className="text-xs text-[#9CA3AF] font-medium">{activity.time}</p>
-              </div>
-            </div>
+              {cat}
+            </button>
           );
         })}
       </div>
+
+      {/* 타임라인 */}
+      <div className="relative flex-1 overflow-y-auto min-h-[260px]">
+        {filtered.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <p className="text-xs text-[#ADB5BD]">해당 항목의 활동이 없습니다</p>
+          </div>
+        ) : (
+          <>
+            <div className="absolute left-[15px] top-2 bottom-2 w-px bg-[#F1F3F5]" />
+            <div className="space-y-3">
+              {filtered.map((activity, i) => (
+                <button
+                  key={i}
+                  className="w-full group flex items-start gap-3 relative hover:bg-[#F8F9FA] -mx-2 px-2 py-1.5 rounded-lg transition-colors text-left"
+                >
+                  <div className={`w-8 h-8 rounded-full ${activity.iconBg} flex items-center justify-center shrink-0 relative z-10`}>
+                    <span className={`${activity.iconColor} inline-flex`} style={{ fontSize: '16px' }}>
+                      {activity.icon}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0 pt-1">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <p className="text-sm font-semibold text-[#212529]">{activity.title}</p>
+                      <span className="text-xs text-[#ADB5BD]">{activity.time}</span>
+                    </div>
+                    <p className="text-xs text-[#868E96] truncate">{activity.detail}</p>
+                  </div>
+                  <ChevronRight
+                    className="w-4 h-4 text-[#CED4DA] opacity-0 group-hover:opacity-100 transition-opacity mt-2.5"
+                    strokeWidth={2.5}
+                  />
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* 푸터 - 전체 보기 */}
+      <button className="group mt-3 pt-3 border-t border-[#F1F3F5] text-xs text-[#4E7FFF] font-semibold hover:text-[#3D6FEF] transition-colors flex items-center justify-center gap-1">
+        전체 활동 내역 보기
+        <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
   );
 }
