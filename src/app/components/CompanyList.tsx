@@ -10,7 +10,7 @@ const rankColors = ['bg-[#4E7FFF] text-white', 'bg-[#212529] text-white', 'bg-[#
 
 export function CompanyList() {
   return (
-    <div className="bg-white rounded-lg border border-[#DEE2E6] overflow-hidden">
+    <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden">
       <div className="px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-base font-bold text-[#212529]">공급사 거래 현황</h3>
