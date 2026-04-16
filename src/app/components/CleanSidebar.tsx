@@ -1,11 +1,22 @@
 import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight, LogOut } from 'lucide-react';
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
-const menuSections = [
+interface MenuItem {
+  name: string;
+  path?: string;
+}
+
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+}
+
+const menuSections: MenuSection[] = [
   {
     title: '대시보드',
     items: [
-      { name: '전체 현황', active: true },
+      { name: '전체 현황', path: '/1' },
     ]
   },
   {
@@ -18,7 +29,7 @@ const menuSections = [
   {
     title: '의약품 구매',
     items: [
-      { name: '전체 상품' },
+      { name: '전체 상품', path: '/products' },
       { name: '장바구니' },
       { name: '주문 내역' },
     ]
@@ -55,6 +66,10 @@ const menuSections = [
 ];
 
 export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>({
     0: true,
     1: true,
@@ -64,6 +79,17 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
   const toggleSection = (index: number) => {
     setExpandedSections(prev => ({ ...prev, [index]: !prev[index] }));
   };
+
+  const handleItemClick = (item: MenuItem) => {
+    if (item.path) {
+      navigate(item.path);
+      if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+        onToggle();
+      }
+    }
+  };
+
+  const isActive = (item: MenuItem) => !!item.path && currentPath === item.path;
 
   return (
     <aside
@@ -90,8 +116,8 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
 
       {/* 모바일 사용자 정보 */}
       <div className="lg:hidden flex items-center gap-2 px-5 py-4 border-b border-white/10">
-        <span className="text-sm font-bold text-white">서울연세의원님</span>
-        <span className="px-2 py-0.5 bg-[#4E7FFF]/20 text-[#8BADFF] text-[10px] font-semibold rounded">병/의원 의사</span>
+        <span className="text-sm font-bold text-white">서울연세약국님</span>
+        <span className="px-2 py-0.5 bg-[#4E7FFF]/20 text-[#8BADFF] text-[10px] font-semibold rounded">개국약사</span>
       </div>
 
       {/* 모바일: 섹션 제목 + 플랫 리스트 */}
@@ -103,21 +129,25 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
           <div key={sectionIndex} className="pt-5">
             <p className="px-5 pb-2 text-[11px] text-white/40 font-medium">{section.title}</p>
             <div>
-              {section.items.map((item, itemIndex) => (
-                <button
-                  key={itemIndex}
-                  className={`
-                    w-full flex items-center justify-between px-5 py-4 transition-colors cursor-pointer
-                    ${item.active
-                      ? 'bg-white/5 text-[#8BADFF] font-bold'
-                      : 'text-white hover:bg-white/5 font-bold'
-                    }
-                  `}
-                >
-                  <span className="text-sm">{item.name}</span>
-                  <ChevronRight className="w-4 h-4 text-white/40" strokeWidth={2} />
-                </button>
-              ))}
+              {section.items.map((item, itemIndex) => {
+                const active = isActive(item);
+                return (
+                  <button
+                    key={itemIndex}
+                    onClick={() => handleItemClick(item)}
+                    className={`
+                      w-full flex items-center justify-between px-5 py-4 transition-colors cursor-pointer
+                      ${active
+                        ? 'bg-white/5 text-[#8BADFF] font-bold'
+                        : 'text-white hover:bg-white/5 font-bold'
+                      }
+                    `}
+                  >
+                    <span className="text-sm">{item.name}</span>
+                    <ChevronRight className="w-4 h-4 text-white/40" strokeWidth={2} />
+                  </button>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -142,20 +172,24 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
             </button>
             {expandedSections[sectionIndex] && section.items.length > 0 && (
               <div className="mt-1 space-y-0.5">
-                {section.items.map((item, itemIndex) => (
-                  <button
-                    key={itemIndex}
-                    className={`
-                      w-full flex items-center px-3 py-2 rounded-md text-xs transition-colors cursor-pointer
-                      ${item.active
-                        ? 'bg-[#4E7FFF]/20 text-[#8BADFF] font-semibold'
-                        : 'text-white/60 hover:bg-white/10 hover:text-white/90 font-medium'
-                      }
-                    `}
-                  >
-                    <span>{item.name}</span>
-                  </button>
-                ))}
+                {section.items.map((item, itemIndex) => {
+                  const active = isActive(item);
+                  return (
+                    <button
+                      key={itemIndex}
+                      onClick={() => handleItemClick(item)}
+                      className={`
+                        w-full flex items-center px-3 py-2 rounded-md text-xs transition-colors cursor-pointer
+                        ${active
+                          ? 'bg-[#4E7FFF]/20 text-[#8BADFF] font-semibold'
+                          : 'text-white/60 hover:bg-white/10 hover:text-white/90 font-medium'
+                        }
+                      `}
+                    >
+                      <span>{item.name}</span>
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>

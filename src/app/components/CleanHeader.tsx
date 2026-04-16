@@ -1,8 +1,10 @@
 import { ShoppingCart, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 interface CleanHeaderProps {
   onMenuClick?: () => void;
   menuOpen?: boolean;
+  cartCount?: number;
 }
 
 function MorphMenuIcon({ open }: { open: boolean }) {
@@ -53,21 +55,24 @@ function MorphMenuIcon({ open }: { open: boolean }) {
   );
 }
 
-export function CleanHeader({ onMenuClick, menuOpen }: CleanHeaderProps) {
+export function CleanHeader({ onMenuClick, menuOpen, cartCount = 0 }: CleanHeaderProps) {
+  const navigate = useNavigate();
   return (
     <header className="h-14 bg-[#2B2D31] border-b border-[#1A1C1F] flex items-center px-4 sm:px-6 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center justify-between w-full">
-        <img src="/Logo.png" alt="PlatPharm" className="h-6 sm:h-7 brightness-0 invert" />
+        <button onClick={() => navigate('/1')} aria-label="대시보드로 이동" className="cursor-pointer">
+          <img src="/Logo.png" alt="PlatPharm" className="h-6 sm:h-7 brightness-0 invert" />
+        </button>
         <div className="flex items-center gap-2 sm:gap-3">
           <button className="relative p-1.5 hover:bg-white/10 rounded-md transition-colors cursor-pointer">
             <ShoppingCart className="w-5 h-5 text-white/80" strokeWidth={2} />
-            <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">8</span>
+            {cartCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartCount}</span>}
           </button>
           <button className="hidden lg:inline-flex p-1.5 hover:bg-white/10 rounded-md transition-colors cursor-pointer">
             <Settings className="w-5 h-5 text-white/80" strokeWidth={2} />
           </button>
           <div className="hidden lg:block w-px h-5 bg-white/20 mx-1" />
-          <span className="hidden lg:inline text-white/70 text-sm">서울연세의원님</span>
+          <span className="hidden lg:inline text-white/70 text-sm">서울연세약국님</span>
           <button className="hidden lg:inline text-white/90 hover:text-white text-sm font-medium transition-colors cursor-pointer">
             로그아웃
           </button>

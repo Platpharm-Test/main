@@ -30,8 +30,8 @@ export default function Dashboard() {
             <div>
               <p className="text-sm text-[#868E96] mb-1">{getGreeting()}</p>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-[#212529]">서울연세의원님</h2>
-                <span className="px-2.5 py-1 bg-[#EDF2FF] text-[#4E7FFF] text-xs font-semibold rounded">병/의원 의사</span>
+                <h2 className="text-lg font-bold text-[#212529]">서울연세약국님</h2>
+                <span className="px-2.5 py-1 bg-[#EDF2FF] text-[#4E7FFF] text-xs font-semibold rounded">개국약사</span>
               </div>
             </div>
             <button className="px-5 py-2.5 bg-[#4E7FFF] text-white text-sm font-semibold rounded-lg hover:bg-[#3D6FEF] transition-colors">
