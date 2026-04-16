@@ -232,13 +232,8 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
 
       {/* 모바일 바텀시트 */}
       <div className={`sm:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out overflow-hidden ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
-        {/* 핸들 */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-[#DEE2E6]" />
-        </div>
-
         {/* 헤더 */}
-        <div className="flex items-center justify-between px-5 pb-3">
+        <div className="flex items-center justify-between px-5 pt-4 pb-3">
           {mobileSection ? (
             <button onClick={() => setMobileSection(null)} className="text-sm text-[#495057] cursor-pointer inline-flex items-center gap-1">
               <ChevronDown className="w-4 h-4 rotate-90" strokeWidth={2} />

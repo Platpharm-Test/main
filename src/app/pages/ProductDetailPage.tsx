@@ -275,11 +275,7 @@ function ProductDetailInner() {
         className={`lg:hidden fixed inset-0 z-[55] bg-black/40 transition-opacity duration-300 ${orderSheetOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       />
       <div className={`lg:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out ${orderSheetOpen ? 'translate-y-0' : 'translate-y-full'}`}>
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-[#DEE2E6]" />
-        </div>
-
-        <div className="px-5 pt-3 pb-4">
+        <div className="px-5 pt-5 pb-4">
           <div className="bg-[#F8F9FA] rounded-xl p-4">
             <p className="text-sm text-[#212529] font-semibold mb-3">{product.name}</p>
             <div className="flex items-center justify-between">
