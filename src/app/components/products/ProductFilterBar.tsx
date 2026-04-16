@@ -157,30 +157,30 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           </button>
         </div>
 
-        {/* 모바일: 필터 칩 가로 스크롤 */}
-        <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto no-scrollbar border-b border-[#F1F3F5]">
-          {filter.categories.map((c) => (
-            <button key={`mc-${c}`} onClick={() => toggle('categories', c)} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
-              {c}
-              <X className="w-3 h-3" strokeWidth={2.5} />
-            </button>
-          ))}
-          {filter.suppliers.map((s) => (
-            <button key={`ms-${s}`} onClick={() => toggle('suppliers', s)} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
-              {s}
-              <X className="w-3 h-3" strokeWidth={2.5} />
-            </button>
-          ))}
-          {filter.excludeSoldOut && (
-            <button onClick={() => onChange({ ...filter, excludeSoldOut: false })} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
-              품절 제외
-              <X className="w-3 h-3" strokeWidth={2.5} />
-            </button>
-          )}
-          {anyActive && (
-            <button onClick={() => onChange(EMPTY_FILTER)} className="text-[11px] text-[#868E96] shrink-0 cursor-pointer whitespace-nowrap">초기화</button>
-          )}
-        </div>
+        {/* 모바일: 필터 칩 가로 스크롤 (데스크톱과 동일 스타일) */}
+        {anyActive && (
+          <div className="lg:hidden flex items-center gap-2 px-4 py-3 overflow-x-auto no-scrollbar bg-[#F8F9FA] border-b border-[#F1F3F5]">
+            {filter.categories.map((c) => (
+              <button key={`mc-${c}`} onClick={() => toggle('categories', c)} className="inline-flex items-center gap-1 h-7 pl-3 pr-2 rounded-full bg-white border border-[#E9ECEF] text-xs text-[#495057] shrink-0 cursor-pointer">
+                {c}
+                <X className="w-3 h-3 text-[#868E96]" strokeWidth={2.5} />
+              </button>
+            ))}
+            {filter.suppliers.map((s) => (
+              <button key={`ms-${s}`} onClick={() => toggle('suppliers', s)} className="inline-flex items-center gap-1 h-7 pl-3 pr-2 rounded-full bg-white border border-[#E9ECEF] text-xs text-[#495057] shrink-0 cursor-pointer">
+                {s}
+                <X className="w-3 h-3 text-[#868E96]" strokeWidth={2.5} />
+              </button>
+            ))}
+            {filter.excludeSoldOut && (
+              <button onClick={() => onChange({ ...filter, excludeSoldOut: false })} className="inline-flex items-center gap-1 h-7 pl-3 pr-2 rounded-full bg-white border border-[#E9ECEF] text-xs text-[#495057] shrink-0 cursor-pointer">
+                품절 제외
+                <X className="w-3 h-3 text-[#868E96]" strokeWidth={2.5} />
+              </button>
+            )}
+            <button onClick={() => onChange(EMPTY_FILTER)} className="text-xs text-[#868E96] hover:text-[#495057] underline cursor-pointer shrink-0 whitespace-nowrap ml-auto">모두 초기화</button>
+          </div>
+        )}
 
         {/* 데스크톱: 기존 필터 행 */}
         <div className="hidden lg:block">
