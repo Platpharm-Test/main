@@ -10,7 +10,6 @@ import { ProductCardCompact } from '../components/products/ProductCardCompact';
 import { ProductPagination } from '../components/products/ProductPagination';
 import { QuickOrderModal } from '../components/products/QuickOrderModal';
 import { CompareTray } from '../components/products/CompareTray';
-import { ProductDetailDrawer } from '../components/products/ProductDetailDrawer';
 import { ToastProvider, useToast } from '../components/ui/Toast';
 import { PRODUCTS, type Product } from '../lib/products';
 import { matchSearch } from '../lib/choseong';
@@ -30,7 +29,6 @@ function ProductsPageInner() {
   const [page, setPage] = useState(Number(params.get('page')) || 1);
   const [quickOpen, setQuickOpen] = useState(false);
   const [compare, setCompare] = useState<Product[]>([]);
-  const [detail, setDetail] = useState<Product | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
 
   // URL 동기화
@@ -166,7 +164,7 @@ function ProductsPageInner() {
                         product={p}
                         cartQty={cart[p.id] || 0}
                         onAddToCart={(q) => addToCart(p, q)}
-                        onClick={() => setDetail(p)}
+                        onClick={() => navigate(`/products/${p.id}`)}
                       />
                     ))}
                   </div>
@@ -178,7 +176,7 @@ function ProductsPageInner() {
                         product={p}
                         cartQty={cart[p.id] || 0}
                         onAddToCart={(q) => addToCart(p, q)}
-                        onClick={() => setDetail(p)}
+                        onClick={() => navigate(`/products/${p.id}`)}
                       />
                     ))}
                   </div>
@@ -198,14 +196,6 @@ function ProductsPageInner() {
         onCompare={() => toast.show(`${compare.length}개 상품 비교`)}
       />
 
-      <ProductDetailDrawer
-        product={detail}
-        onClose={() => setDetail(null)}
-        onAddToCart={(q) => { if (detail) { addToCart(detail, q); setDetail(null); } }}
-        onToggleCompare={() => { if (detail) toggleCompare(detail); }}
-        inCompare={!!detail && compare.some((p) => p.id === detail.id)}
-      />
-
       <QuickOrderModal
         open={quickOpen}
         onClose={() => setQuickOpen(false)}
@@ -221,6 +211,7 @@ function ProductsPageInner() {
           toast.show(fail === 0 ? `${matched.length}건 일괄 담기 완료` : `${matched.length}건 담기 / ${fail}건 코드 미일치`);
         }}
       />
+
     </div>
   );
 }

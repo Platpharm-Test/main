@@ -1,6 +1,7 @@
 import { Minus, Plus, Bell, BellRing } from 'lucide-react';
 import { useState } from 'react';
 import type { Product } from '../../lib/products';
+import { ProductImage } from './ProductImage';
 
 interface ProductCardCompactProps {
   product: Product;
@@ -21,10 +22,12 @@ export function ProductCardCompact({ product, cartQty = 0, onAddToCart, onClick 
         disabled ? 'bg-[#F8F9FA] border-[#E9ECEF]' : 'bg-white border-[#E9ECEF] hover:border-[#CED4DA]'
       }`}
     >
+      <div className="flex justify-center mb-3">
+        <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="md" />
+      </div>
       <p className={`text-[11px] mb-0.5 ${disabled ? 'text-[#CED4DA]' : 'text-[#868E96]'}`}>{product.supplier}</p>
       <p className={`text-sm font-bold line-clamp-2 leading-tight mb-1 ${disabled ? 'text-[#ADB5BD]' : 'text-[#212529]'}`}>{product.name}</p>
       <p className={`text-[11px] font-mono mb-2 ${disabled ? 'text-[#CED4DA]' : 'text-[#ADB5BD]'}`}>{product.code}</p>
-      <p className={`text-[11px] mb-3 ${disabled ? 'text-[#CED4DA]' : 'text-[#868E96]'}`}>{product.drugClass}</p>
 
       <div className="border-t border-[#F1F3F5] pt-2.5 mt-auto">
         <div className="flex items-baseline justify-between mb-1">

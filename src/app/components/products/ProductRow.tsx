@@ -1,6 +1,7 @@
 import { Minus, Plus, Bell, BellRing } from 'lucide-react';
 import { useState } from 'react';
 import type { Product } from '../../lib/products';
+import { ProductImage } from './ProductImage';
 
 interface ProductRowProps {
   product: Product;
@@ -9,7 +10,7 @@ interface ProductRowProps {
   onClick?: () => void;
 }
 
-const ROW_GRID = 'grid grid-cols-[minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4';
+const ROW_GRID = 'grid grid-cols-[40px_minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4';
 
 export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: ProductRowProps) {
   const [qty, setQty] = useState(product.moq);
@@ -29,6 +30,9 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
         disabled ? 'bg-[#F8F9FA]' : 'hover:bg-[#FAFBFC]'
       }`}
     >
+      {/* 이미지 */}
+      <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="sm" />
+
       {/* 상품명 */}
       <div className="min-w-0">
         <p className={`text-sm font-semibold truncate ${nameColor}`}>{product.name}</p>
@@ -115,6 +119,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
 export function ProductRowHeader() {
   return (
     <div className={`${ROW_GRID} px-4 py-2.5 bg-[#F8F9FA] border-b border-[#E9ECEF] text-[11px] font-bold text-[#495057]`}>
+      <span></span>
       <span>상품명</span>
       <span>약제코드</span>
       <span>제약사</span>
