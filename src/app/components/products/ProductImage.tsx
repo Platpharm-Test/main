@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pill, Droplets, Syringe, FlaskConical, TestTube, Package } from 'lucide-react';
 import type { DrugForm } from '../../lib/products';
 
@@ -44,16 +44,13 @@ export function ProductImage({ form, category, name, code, image, size = 'md' }:
   const Icon = FORM_ICON[form] || Package;
   const color = CATEGORY_COLORS[category] || DEFAULT_COLOR;
 
-  // 1순위: /products/{code}.png 자동 매칭 시도
-  // 2순위: product.image 필드 (명시적 지정)
-  // 3순위: 정 제형이면 /pill.png, 그 외는 /package.png
-  const autoPath = code ? `/products/${code}.png` : null;
-  const fallback = form === '정' ? '/pill.png' : '/package.png';
+  const src = code ? `/products/${code}.png` : image;
+  const [failed, setFailed] = useState(false);
 
-  // 에러 시 다음 단계로 진행
-  const [srcIndex, setSrcIndex] = useState(0);
-  const sources = [autoPath, image, fallback].filter(Boolean) as string[];
-  const currentSrc = sources[srcIndex];
+  // 상품이 바뀌면 실패 상태 리셋
+  useEffect(() => {
+    setFailed(false);
+  }, [src]);
 
   const sizeMap = {
     sm: { wrapper: 'w-10 h-10 rounded-lg', img: 'w-10 h-10 rounded-lg', icon: 'w-5 h-5', text: 'hidden' },
@@ -63,16 +60,15 @@ export function ProductImage({ form, category, name, code, image, size = 'md' }:
 
   const s = sizeMap[size];
 
-  if (currentSrc) {
+  if (src && !failed) {
     return (
       <img
-        src={currentSrc}
+        key={src}
+        src={src}
         alt={name}
         className={`${s.img} object-contain bg-[#F8F9FA]`}
         loading="lazy"
-        onError={() => {
-          if (srcIndex < sources.length - 1) setSrcIndex(srcIndex + 1);
-        }}
+        onError={() => setFailed(true)}
       />
     );
   }

@@ -33,13 +33,11 @@ export const PRODUCTS: Product[] = [
   { id: 10, code: 'YUH-010', name: '삐콤씨 정', supplier: '유한양행', drugClass: '일반', category: '비타민·영양제', form: '정', spec: '100정', unitPrice: 720, packSize: 100, packLabel: '1통 (100정)', moq: 1, stock: '품절', stockCount: 0, image: '/pill.png' },
   { id: 13, code: 'YUH-013', name: '래피콜케어 건조시럽', supplier: '유한양행', drugClass: '일반', category: '감기약', form: '기타', spec: '3g × 10포', unitPrice: 3200, packSize: 10, packLabel: '1박스 (10포)', moq: 1, stock: '충분', stockCount: 528, image: '/package.png' },
   { id: 21, code: 'YUH-021', name: '유한 이브펜 연질캡슐', supplier: '유한양행', drugClass: '일반', category: '해열진통소염제', form: '캡슐', spec: '10캡슐', unitPrice: 2200, packSize: 10, packLabel: '1박스 (10캡슐)', moq: 1, stock: '충분', stockCount: 156, image: '/package.png' },
-  { id: 25, code: 'YUH-025', name: '메가트루 루테인', supplier: '유한양행', drugClass: '일반', category: '건강기능식품', form: '캡슐', spec: '500mg × 60캡슐', unitPrice: 17600, packSize: 60, packLabel: '1통 (60캡슐)', moq: 1, stock: '충분', stockCount: 85, image: '/pill.png' },
   { id: 28, code: 'YUH-028', name: '라라올라 히알루론산 정', supplier: '유한양행', drugClass: '일반', category: '건강기능식품', form: '정', spec: '60정', unitPrice: 5280, packSize: 60, packLabel: '1통 (60정)', moq: 1, stock: '충분', stockCount: 320, image: '/pill.png', newArrival: true },
   { id: 29, code: 'YUH-029', name: '쎄레스톤지 크림', supplier: '유한양행', drugClass: '일반', category: '피부과약', form: '연고', spec: '15g', unitPrice: 5640, packSize: 1, packLabel: '1개', moq: 1, stock: '보통', stockCount: 175, image: '/package.png' },
   // 종근당건강 (실제 제품)
   { id: 9, code: 'JOO-009', name: '락토핏 생유산균 골드', supplier: '종근당', drugClass: '일반', category: '건강기능식품', form: '기타', spec: '2g × 50포', unitPrice: 380, packSize: 50, packLabel: '1박스 (50포)', moq: 1, stock: '보통', stockCount: 142, image: '/package.png', recentOrdered: true },
   { id: 19, code: 'JOO-019', name: '프로메가 오메가3', supplier: '종근당', drugClass: '일반', category: '건강기능식품', form: '캡슐', spec: '1200mg × 60캡슐', unitPrice: 980, packSize: 60, packLabel: '1통 (60캡슐)', moq: 1, stock: '충분', stockCount: 268, image: '/package.png' },
-  { id: 27, code: 'JOO-027', name: '아이클리어 루테인지아잔틴', supplier: '종근당', drugClass: '일반', category: '건강기능식품', form: '캡슐', spec: '500mg × 60캡슐', unitPrice: 22770, packSize: 60, packLabel: '1통 (60캡슐)', moq: 1, stock: '보통', stockCount: 64, image: '/package.png' },
   { id: 34, code: 'JOO-034', name: '아임비타 멀티비타민', supplier: '종근당', drugClass: '일반', category: '건강기능식품', form: '정', spec: '60정', unitPrice: 580, packSize: 60, packLabel: '1통 (60정)', moq: 1, stock: '보통', stockCount: 132, image: '/pill.png' },
   // 삼진제약 (실제 게보린 라인업)
   { id: 6, code: 'SAM-006', name: '게보린 정', supplier: '삼진제약', drugClass: '일반', category: '해열진통소염제', form: '정', spec: '10정', unitPrice: 1200, packSize: 10, packLabel: '1박스 (10정)', moq: 1, stock: '품절', stockCount: 0, image: '/pill.png' },
@@ -68,9 +66,7 @@ export const PRODUCTS: Product[] = [
   { id: 40, code: 'HSS-040', name: '한솔 은교산엑스과립', supplier: '한솔신약', drugClass: '일반', category: '감기약', form: '기타', spec: '3g × 20포', unitPrice: 650, packSize: 20, packLabel: '1박스 (20포)', moq: 1, stock: '충분', stockCount: 186, image: '/package.png', newArrival: true },
   // 에프앤디넷 (약국 전용 건강기능식품 유통)
   { id: 15, code: 'FND-015', name: '닥터에디션 프로바이오틱스', supplier: '에프앤디넷', drugClass: '일반', category: '건강기능식품', form: '기타', spec: '2g × 30포', unitPrice: 9800, packSize: 30, packLabel: '1박스 (30포)', moq: 1, stock: '충분', stockCount: 142, image: '/package.png' },
-  { id: 22, code: 'FND-022', name: '닥터에디션 키즈 멀티비타민', supplier: '에프앤디넷', drugClass: '일반', category: '건강기능식품', form: '정', spec: '60정', unitPrice: 12500, packSize: 60, packLabel: '1통 (60정)', moq: 1, stock: '보통', stockCount: 88, image: '/pill.png', newArrival: true },
   { id: 26, code: 'FND-026', name: '더팜 시크릿우먼', supplier: '에프앤디넷', drugClass: '일반', category: '여성건강', form: '캡슐', spec: '60캡슐', unitPrice: 9923, packSize: 60, packLabel: '1통 (60캡슐)', moq: 1, stock: '충분', stockCount: 210, image: '/package.png' },
-  { id: 30, code: 'FND-030', name: '닥터에디션 오메가3', supplier: '에프앤디넷', drugClass: '일반', category: '건강기능식품', form: '캡슐', spec: '1000mg × 60캡슐', unitPrice: 13200, packSize: 60, packLabel: '1통 (60캡슐)', moq: 1, stock: '충분', stockCount: 96, image: '/package.png' },
   { id: 33, code: 'FND-033', name: '맘엔레디 임산부 영양제', supplier: '에프앤디넷', drugClass: '일반', category: '건강기능식품', form: '정', spec: '60정', unitPrice: 8900, packSize: 60, packLabel: '1통 (60정)', moq: 1, stock: '품절 임박', stockCount: 11, image: '/pill.png' },
 ];
 
