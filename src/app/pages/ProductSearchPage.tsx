@@ -63,8 +63,8 @@ export default function ProductSearchPage() {
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="의약품명, SKU, 제약사 검색"
-            className="w-full h-11 pl-10 pr-10 text-sm bg-[#F8F9FA] border-2 border-[#4E7FFF] rounded-full focus:outline-none"
+            placeholder="의약품명·SKU·제약사 검색"
+            className="w-full h-10 pl-10 pr-10 text-sm bg-[#F8F9FA] rounded-lg border border-transparent focus:bg-white focus:border-[#4E7FFF] focus:outline-none transition-colors"
           />
           {query && (
             <button
