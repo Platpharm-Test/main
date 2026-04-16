@@ -13,6 +13,7 @@ import { CompareTray } from '../components/products/CompareTray';
 import { ToastProvider, useToast } from '../components/ui/Toast';
 import { PRODUCTS, type Product } from '../lib/products';
 import { matchSearch } from '../lib/choseong';
+import { useCart } from '../lib/cart';
 
 const PAGE_SIZE = 12;
 
@@ -29,7 +30,7 @@ function ProductsPageInner() {
   const [page, setPage] = useState(Number(params.get('page')) || 1);
   const [quickOpen, setQuickOpen] = useState(false);
   const [compare, setCompare] = useState<Product[]>([]);
-  const [cart, setCart] = useState<Record<string, number>>({});
+  const { cart, addToCart: addToCartStore, cartKindCount } = useCart();
 
   // URL 동기화
   useEffect(() => {
@@ -69,11 +70,9 @@ function ProductsPageInner() {
   useEffect(() => { setPage(1); }, [search, sort, filter]);
 
   const addToCart = (product: Product, qty: number) => {
-    setCart((prev) => ({ ...prev, [product.id]: (prev[product.id] || 0) + qty }));
+    addToCartStore(product.id, qty);
     toast.show(`${product.name} ${qty}개 담기 완료`);
   };
-
-  const cartKindCount = Object.keys(cart).length;
 
   const toggleCompare = (product: Product) => {
     setCompare((prev) => {
@@ -207,7 +206,7 @@ function ProductsPageInner() {
           matched.forEach((l) => {
             const product = PRODUCTS.find((p) => p.code.toUpperCase() === l.code.toUpperCase());
             if (product) {
-              setCart((prev) => ({ ...prev, [product.id]: (prev[product.id] || 0) + l.qty }));
+              addToCartStore(product.id, l.qty);
             }
           });
           toast.show(fail === 0 ? `${matched.length}건 일괄 담기 완료` : `${matched.length}건 담기 / ${fail}건 코드 미일치`);

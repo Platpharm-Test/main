@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, ChevronRight, Search, SlidersHorizontal, X, Zap } from 'lucide-react';
+import { ChevronDown, ChevronRight, Filter, Search, SlidersHorizontal, X, Zap } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, SUPPLIERS } from '../../lib/products';
 
 export interface FilterState {
@@ -39,6 +39,22 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
   const [mobileSection, setMobileSection] = useState<string | null>(null);
   // 모바일 모달 안에서 임시 필터 상태
   const [draft, setDraft] = useState<FilterState>(filter);
+
+  // draft 기준 실시간 결과 카운트 (검색어도 반영)
+  const draftResultCount = useMemo(() => {
+    return PRODUCTS.filter((p) => {
+      if (search) {
+        const q = search.toLowerCase();
+        const hit = [p.name, p.code, p.supplier, p.category].some((v) => v.toLowerCase().includes(q));
+        if (!hit) return false;
+      }
+      if (draft.categories.length && !draft.categories.includes(p.category)) return false;
+      if (draft.suppliers.length && !draft.suppliers.includes(p.supplier)) return false;
+      if (p.unitPrice < draft.priceMin || p.unitPrice > draft.priceMax) return false;
+      if (draft.excludeSoldOut && p.stock === '품절') return false;
+      return true;
+    }).length;
+  }, [draft, search]);
 
   const openMobileFilter = () => {
     setDraft(filter);
@@ -187,7 +203,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
       />
 
       {/* 모바일 바텀시트 */}
-      <div className={`sm:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
+      <div className={`sm:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out overflow-hidden ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
         {/* 핸들 */}
         <div className="flex justify-center pt-3 pb-1">
           <div className="w-10 h-1 rounded-full bg-[#DEE2E6]" />
@@ -209,8 +225,9 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
         </div>
 
         {!mobileSection && (
-          <div className="text-[13px] text-[#868E96] text-center py-2.5 bg-[#F8F9FA] border-y border-[#F1F3F5]">
-            <span className="text-[#4E7FFF]">▼</span> 상세조건은 모든 상품에 적용됩니다.
+          <div className="flex items-center justify-center gap-1.5 text-[13px] text-[#868E96] py-2.5 bg-[#F8F9FA] border-y border-[#F1F3F5]">
+            <Filter className="w-3.5 h-3.5 text-[#868E96] fill-current" strokeWidth={2} />
+            <span>상세조건은 모든 상품에 적용됩니다.</span>
           </div>
         )}
 
@@ -263,7 +280,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
             초기화
           </button>
           <button onClick={() => { if (mobileSection) setMobileSection(null); else applyMobileFilter(); }} className="flex-1 h-[50px] rounded-xl bg-[#4E7FFF] text-white text-[15px] font-semibold cursor-pointer">
-            {mobileSection ? '선택완료' : `${resultCount}건 상품보기`}
+            {mobileSection ? '선택완료' : `${draftResultCount}건 상품보기`}
           </button>
         </div>
       </div>
@@ -333,8 +350,8 @@ function MobileFilterRow({ label, count, onClick, toggle, checked }: { label: st
         {count > 0 && !toggle && <span className="text-[13px] text-[#4E7FFF] font-semibold">{count}개</span>}
       </div>
       {toggle ? (
-        <span className={`w-11 h-[26px] rounded-full transition-colors relative ${checked ? 'bg-[#4E7FFF]' : 'bg-[#DEE2E6]'}`}>
-          <span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-[22px]' : 'translate-x-[3px]'}`} />
+        <span className={`relative w-[46px] h-[26px] rounded-full transition-colors duration-200 shrink-0 ${checked ? 'bg-[#4E7FFF]' : 'bg-[#DEE2E6]'}`}>
+          <span className={`absolute top-[3px] left-[3px] w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out ${checked ? 'translate-x-[20px]' : 'translate-x-0'}`} />
         </span>
       ) : (
         <ChevronRight className="w-5 h-5 text-[#CED4DA]" strokeWidth={1.5} />

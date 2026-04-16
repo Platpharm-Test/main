@@ -6,17 +6,21 @@ import { CleanSidebar } from '../components/CleanSidebar';
 import { PRODUCTS, STOCK_DOT, STOCK_LABEL_COLOR, type Product } from '../lib/products';
 import { ProductImage } from '../components/products/ProductImage';
 import { ToastProvider, useToast } from '../components/ui/Toast';
+import { useCart } from '../lib/cart';
 
 function ProductDetailInner() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const toast = useToast();
+  const { addToCart: addToCartStore, scraps, toggleScrap, cartKindCount } = useCart();
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
 
   const product = PRODUCTS.find((p) => p.id === Number(id));
   const [qty, setQty] = useState(product?.moq ?? 1);
   const [notified, setNotified] = useState(false);
-  const [scrapped, setScrapped] = useState(false);
+  const [orderSheetOpen, setOrderSheetOpen] = useState(false);
+
+  const scrapped = !!product && !!scraps[product.id];
 
   useEffect(() => {
     if (product) setQty(product.moq);
@@ -47,13 +51,14 @@ function ProductDetailInner() {
   const related = PRODUCTS.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4);
 
   const addToCart = () => {
+    addToCartStore(product.id, qty);
     toast.show(`${product.name} ${qty}개 담기 완료`);
     setQty(product.moq);
   };
 
   return (
     <div className="min-h-screen bg-[#F5F6F8]">
-      <CleanHeader onMenuClick={() => setSidebarOpen((v) => !v)} menuOpen={sidebarOpen} />
+      <CleanHeader onMenuClick={() => setSidebarOpen((v) => !v)} menuOpen={sidebarOpen} cartCount={cartKindCount} />
       <CleanSidebar collapsed={!sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       <main className={`${sidebarOpen ? 'lg:ml-56' : 'lg:ml-0'} mt-14 p-4 sm:p-6 lg:p-8 transition-all duration-300`}>
@@ -103,10 +108,10 @@ function ProductDetailInner() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            setScrapped((v) => !v);
+                            toggleScrap(product.id);
                             toast.show(scrapped ? '스크랩이 해제되었습니다' : '스크랩에 저장되었습니다');
                           }}
-                          className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                          className={`hidden lg:block p-1.5 rounded-lg transition-colors cursor-pointer ${
                             scrapped
                               ? 'bg-[#EDF2FF]'
                               : 'bg-[#F1F3F5] hover:bg-[#E9ECEF]'
@@ -230,29 +235,83 @@ function ProductDetailInner() {
         </div>
       </main>
 
-      {/* 모바일: 하단 고정 주문 바 */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E9ECEF] px-4 py-3 safe-area-pb">
+      {/* 모바일: 하단 고정 액션 바 */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E9ECEF] px-4 py-3">
         {disabled ? (
-          <button onClick={() => { setNotified((v) => !v); toast.show(notified ? '재입고 알림이 취소되었습니다' : '재입고 시 알림을 보내드립니다'); }} className={`w-full h-12 rounded-lg border text-sm font-semibold inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${notified ? 'bg-[#4E7FFF] border-[#4E7FFF] text-white' : 'bg-white border-[#DEE2E6] text-[#495057]'}`}>
-            {notified ? <BellRing className="w-4 h-4" strokeWidth={2.5} /> : <Bell className="w-4 h-4" strokeWidth={2} />}
-            {notified ? '알림 신청됨' : '재입고 알림 신청'}
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => { toggleScrap(product.id); toast.show(scrapped ? '스크랩이 해제되었습니다' : '스크랩에 저장되었습니다'); }}
+              className="flex flex-col items-center justify-center shrink-0 px-2 cursor-pointer"
+              aria-label={scrapped ? '스크랩 해제' : '스크랩'}
+            >
+              <Bookmark className={`w-6 h-6 ${scrapped ? 'text-[#4E7FFF] fill-[#4E7FFF]' : 'text-[#495057]'}`} strokeWidth={2} />
+              <span className="text-[10px] text-[#868E96] mt-0.5 tabular-nums">{scrapped ? '1' : '0'}</span>
+            </button>
+            <button onClick={() => { setNotified((v) => !v); toast.show(notified ? '재입고 알림이 취소되었습니다' : '재입고 시 알림을 보내드립니다'); }} className={`flex-1 h-12 rounded-lg border text-sm font-semibold inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${notified ? 'bg-[#4E7FFF] border-[#4E7FFF] text-white' : 'bg-white border-[#DEE2E6] text-[#495057]'}`}>
+              {notified ? <BellRing className="w-4 h-4" strokeWidth={2.5} /> : <Bell className="w-4 h-4" strokeWidth={2} />}
+              {notified ? '알림 신청됨' : '재입고 알림 신청'}
+            </button>
+          </div>
         ) : (
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <p className="text-lg font-bold text-[#212529] tabular-nums whitespace-nowrap">₩{totalPrice.toLocaleString()}</p>
-              <div className="flex items-center border border-[#DEE2E6] rounded-lg h-10 bg-white shrink-0">
+            <button
+              onClick={() => { toggleScrap(product.id); toast.show(scrapped ? '스크랩이 해제되었습니다' : '스크랩에 저장되었습니다'); }}
+              className="flex flex-col items-center justify-center shrink-0 px-2 cursor-pointer"
+              aria-label={scrapped ? '스크랩 해제' : '스크랩'}
+            >
+              <Bookmark className={`w-6 h-6 ${scrapped ? 'text-[#4E7FFF] fill-[#4E7FFF]' : 'text-[#495057]'}`} strokeWidth={2} />
+              <span className="text-[10px] text-[#868E96] mt-0.5 tabular-nums">{scrapped ? '1' : '0'}</span>
+            </button>
+            <button onClick={() => setOrderSheetOpen(true)} className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-[15px] font-bold cursor-pointer inline-flex items-center justify-center gap-2">
+              구매하기
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* 모바일: 주문 바텀시트 */}
+      <div
+        onClick={() => setOrderSheetOpen(false)}
+        className={`lg:hidden fixed inset-0 z-[55] bg-black/40 transition-opacity duration-300 ${orderSheetOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      />
+      <div className={`lg:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out ${orderSheetOpen ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-[#DEE2E6]" />
+        </div>
+
+        <div className="px-5 pt-3 pb-4">
+          <div className="bg-[#F8F9FA] rounded-xl p-4">
+            <p className="text-sm text-[#212529] font-semibold mb-3">{product.name}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center border border-[#DEE2E6] rounded-lg h-9 bg-white">
                 <button onClick={() => setQty(Math.max(product.moq, qty - 1))} className="w-8 h-full flex items-center justify-center text-[#868E96] cursor-pointer"><Minus className="w-3.5 h-3.5" strokeWidth={2} /></button>
                 <input type="text" inputMode="numeric" value={qty} onChange={(e) => setQty(Math.max(product.moq, Number(e.target.value.replace(/[^0-9]/g, '')) || product.moq))} className="w-10 h-full text-center text-sm font-semibold text-[#212529] outline-none border-x border-[#DEE2E6] tabular-nums bg-transparent" />
                 <button onClick={() => setQty(qty + 1)} className="w-8 h-full flex items-center justify-center text-[#868E96] cursor-pointer"><Plus className="w-3.5 h-3.5" strokeWidth={2} /></button>
               </div>
+              <p className="text-base font-bold text-[#212529] tabular-nums">₩{totalPrice.toLocaleString()}</p>
             </div>
-            <button onClick={addToCart} className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-sm font-semibold cursor-pointer inline-flex items-center justify-center gap-2">
-              <ShoppingCart className="w-4 h-4" strokeWidth={2.5} />
-              담기
-            </button>
           </div>
-        )}
+        </div>
+
+        <div className="flex items-center justify-between px-5 py-3 border-t border-[#F1F3F5]">
+          <span className="text-sm text-[#495057]">주문금액</span>
+          <span className="text-lg font-bold text-[#212529] tabular-nums">₩{totalPrice.toLocaleString()}</span>
+        </div>
+
+        <div className="flex items-center gap-3 px-5 py-3 border-t border-[#E9ECEF]">
+          <button
+            onClick={() => { addToCart(); setOrderSheetOpen(false); }}
+            className="flex-1 h-12 rounded-lg border border-[#4E7FFF] text-[#4E7FFF] text-[15px] font-bold cursor-pointer"
+          >
+            장바구니
+          </button>
+          <button
+            onClick={() => { addToCart(); setOrderSheetOpen(false); toast.show('주문서로 이동합니다'); }}
+            className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-[15px] font-bold cursor-pointer"
+          >
+            바로구매
+          </button>
+        </div>
       </div>
 
       {/* 모바일 하단 바 높이만큼 여백 */}
