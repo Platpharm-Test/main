@@ -23,7 +23,7 @@ export function ProductCardCompact({ product, cartQty = 0, onAddToCart, onClick 
       }`}
     >
       <div className="flex justify-center mb-3">
-        <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="md" />
+        <ProductImage form={product.form} category={product.category} name={product.name} code={product.code} image={product.image} size="md" />
       </div>
       <p className={`text-[11px] mb-0.5 ${disabled ? 'text-[#CED4DA]' : 'text-[#868E96]'}`}>{product.supplier}</p>
       <p className={`text-sm font-bold line-clamp-2 leading-tight mb-1 ${disabled ? 'text-[#ADB5BD]' : 'text-[#212529]'}`}>{product.name}</p>

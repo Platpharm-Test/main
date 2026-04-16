@@ -93,7 +93,7 @@ function ProductDetailInner() {
                 <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4">
                   {/* 상품 이미지 */}
                   <div className="shrink-0 flex justify-center sm:justify-start">
-                    <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="lg" />
+                    <ProductImage form={product.form} category={product.category} name={product.name} code={product.code} image={product.image} size="lg" />
                   </div>
 
                   {/* 상품 정보 */}

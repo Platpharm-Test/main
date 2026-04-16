@@ -32,7 +32,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
     >
       {/* 데스크톱: 기존 그리드 */}
       <div className={`${ROW_GRID} px-4 py-3`}>
-        <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="sm" />
+        <ProductImage form={product.form} category={product.category} name={product.name} code={product.code} image={product.image} size="sm" />
         <div className="min-w-0">
           <p className={`text-sm font-semibold truncate ${nameColor}`}>{product.name}</p>
           <p className={`text-[11px] truncate ${tertiaryColor}`}>{product.spec}</p>
@@ -77,7 +77,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
       {/* 모바일: 컴팩트 카드형 */}
       <div className="md:hidden px-4 py-3">
         <div className="flex gap-3">
-          <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="sm" />
+          <ProductImage form={product.form} category={product.category} name={product.name} code={product.code} image={product.image} size="sm" />
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pill, Droplets, Syringe, FlaskConical, TestTube, Package } from 'lucide-react';
 import type { DrugForm } from '../../lib/products';
 
@@ -34,13 +35,25 @@ interface ProductImageProps {
   form: DrugForm;
   category: string;
   name: string;
+  code?: string;
   image?: string;
   size?: 'sm' | 'md' | 'lg';
 }
 
-export function ProductImage({ form, category, name, image, size = 'md' }: ProductImageProps) {
+export function ProductImage({ form, category, name, code, image, size = 'md' }: ProductImageProps) {
   const Icon = FORM_ICON[form] || Package;
   const color = CATEGORY_COLORS[category] || DEFAULT_COLOR;
+
+  // 1순위: /products/{code}.png 자동 매칭 시도
+  // 2순위: product.image 필드 (명시적 지정)
+  // 3순위: 정 제형이면 /pill.png, 그 외는 /package.png
+  const autoPath = code ? `/products/${code}.png` : null;
+  const fallback = form === '정' ? '/pill.png' : '/package.png';
+
+  // 에러 시 다음 단계로 진행
+  const [srcIndex, setSrcIndex] = useState(0);
+  const sources = [autoPath, image, fallback].filter(Boolean) as string[];
+  const currentSrc = sources[srcIndex];
 
   const sizeMap = {
     sm: { wrapper: 'w-10 h-10 rounded-lg', img: 'w-10 h-10 rounded-lg', icon: 'w-5 h-5', text: 'hidden' },
@@ -50,13 +63,16 @@ export function ProductImage({ form, category, name, image, size = 'md' }: Produ
 
   const s = sizeMap[size];
 
-  if (image) {
+  if (currentSrc) {
     return (
       <img
-        src={image}
+        src={currentSrc}
         alt={name}
         className={`${s.img} object-contain bg-[#F8F9FA]`}
         loading="lazy"
+        onError={() => {
+          if (srcIndex < sources.length - 1) setSrcIndex(srcIndex + 1);
+        }}
       />
     );
   }
