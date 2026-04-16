@@ -4,12 +4,14 @@ import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import AddIcon from '@mui/icons-material/Add';
 import { useState, type ReactNode } from 'react';
+import { useNavigate } from 'react-router';
 
 interface Action {
   icon: ReactNode;
   label: string;
   iconBg: string;
   iconColor: string;
+  href?: string;
 }
 
 const actions: Action[] = [
@@ -18,6 +20,7 @@ const actions: Action[] = [
     label: '주문하기',
     iconBg: 'bg-[#EDF2FF]',
     iconColor: 'text-[#4E7FFF]',
+    href: '/products',
   },
   {
     icon: <ReceiptLongIcon fontSize="inherit" />,
@@ -41,6 +44,7 @@ const actions: Action[] = [
 
 export function QuickActions() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -74,7 +78,8 @@ export function QuickActions() {
           </span>
           <button
             aria-label={action.label}
-            className="w-14 h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center hover:scale-105 transition-transform"
+            onClick={() => { if (action.href) { setOpen(false); navigate(action.href); } }}
+            className="w-14 h-14 rounded-full bg-white shadow-[0_4px_12px_rgba(0,0,0,0.2)] flex items-center justify-center hover:scale-105 transition-transform cursor-pointer"
           >
             <span className="text-[#444444] inline-flex" style={{ fontSize: '24px' }}>
               {action.icon}
