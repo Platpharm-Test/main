@@ -40,7 +40,7 @@ export function ProductResultHeader({
           결과 <span className="font-bold text-[#212529]">{count}</span>건
         </p>
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center bg-white border border-[#DEE2E6] rounded-md overflow-hidden">
+          <div className="flex items-center bg-white border border-[#DEE2E6] rounded-md overflow-hidden">
             <button
               onClick={() => onViewChange('list')}
               className={`p-1.5 cursor-pointer transition-colors ${view === 'list' ? 'bg-[#212529] text-white' : 'text-[#495057] hover:bg-[#F8F9FA]'}`}

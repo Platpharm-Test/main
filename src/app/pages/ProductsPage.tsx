@@ -105,15 +105,9 @@ function ProductsPageInner() {
           <div className="mb-3 sm:hidden">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-base font-bold text-[#212529]">전체 상품 <span className="text-[#868E96] font-medium">{PRODUCTS.length}</span></h2>
-              <div className="flex items-center gap-1">
-                <button aria-label="발주서 작성" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#F1F3F5] cursor-pointer">
-                  <FileText className="w-[18px] h-[18px] text-[#495057]" strokeWidth={2} />
-                </button>
-                <button aria-label="장바구니" className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#F1F3F5] cursor-pointer">
-                  <ShoppingCart className="w-[18px] h-[18px] text-[#495057]" strokeWidth={2} />
-                  {cartKindCount > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartKindCount}</span>}
-                </button>
-              </div>
+              <button className="h-8 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] cursor-pointer">
+                발주서 작성
+              </button>
             </div>
           </div>
 
