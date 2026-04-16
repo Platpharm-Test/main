@@ -135,6 +135,7 @@ function ProductsPageInner() {
             onSearchChange={setSearch}
             onQuickOrderClick={() => setQuickOpen(true)}
             activeChips={activeChips}
+            resultCount={filtered.length}
           />
 
           {/* 결과 */}

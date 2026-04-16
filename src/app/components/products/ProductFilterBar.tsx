@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, Search, X, Zap } from 'lucide-react';
+import { ChevronDown, ChevronRight, Search, SlidersHorizontal, X, Zap } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, SUPPLIERS } from '../../lib/products';
 
 export interface FilterState {
@@ -31,23 +31,36 @@ interface ProductFilterBarProps {
   onSearchChange: (v: string) => void;
   onQuickOrderClick: () => void;
   activeChips?: ActiveChip[];
+  resultCount?: number;
 }
 
-export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQuickOrderClick, activeChips = [] }: ProductFilterBarProps) {
-  const counts = useMemo(() => {
-    const cat: Record<string, number> = {};
-    const sup: Record<string, number> = {};
-    for (const p of PRODUCTS) {
-      cat[p.category] = (cat[p.category] || 0) + 1;
-      sup[p.supplier] = (sup[p.supplier] || 0) + 1;
-    }
-    return { cat, sup };
-  }, []);
+export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQuickOrderClick, activeChips = [], resultCount = 0 }: ProductFilterBarProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSection, setMobileSection] = useState<string | null>(null);
+  // 모바일 모달 안에서 임시 필터 상태
+  const [draft, setDraft] = useState<FilterState>(filter);
+
+  const openMobileFilter = () => {
+    setDraft(filter);
+    setMobileSection(null);
+    setMobileOpen(true);
+  };
+
+  const applyMobileFilter = () => {
+    onChange(draft);
+    setMobileOpen(false);
+  };
 
   const toggle = <K extends keyof FilterState>(key: K, value: FilterState[K] extends Array<infer U> ? U : never) => {
     const arr = filter[key] as unknown as Array<typeof value>;
     const next = arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
     onChange({ ...filter, [key]: next });
+  };
+
+  const toggleDraft = <K extends keyof FilterState>(key: K, value: FilterState[K] extends Array<infer U> ? U : never) => {
+    const arr = draft[key] as unknown as Array<typeof value>;
+    const next = arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
+    setDraft({ ...draft, [key]: next });
   };
 
   const anyActive =
@@ -57,101 +70,191 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
     filter.priceMax !== EMPTY_FILTER.priceMax ||
     filter.excludeSoldOut;
 
+  const activeCount = filter.categories.length + filter.suppliers.length + (filter.excludeSoldOut ? 1 : 0) + (filter.priceMin > 0 || filter.priceMax !== EMPTY_FILTER.priceMax ? 1 : 0);
+
   return (
-    <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] mb-4 overflow-hidden">
-      <div className="flex items-center gap-2 px-5 py-3.5 border-b border-[#F1F3F5]">
-        <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
-          <input
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="의약품명·성분·SKU·제약사 검색"
-            className={`w-full h-10 pl-10 ${search ? 'pr-10' : 'pr-4'} text-sm bg-[#F8F9FA] rounded-lg border border-transparent focus:bg-white focus:border-[#4E7FFF] focus:outline-none transition-colors`}
-          />
-          {search && (
-            <button
-              type="button"
-              onClick={() => onSearchChange('')}
-              aria-label="검색어 지우기"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-[#CED4DA] hover:bg-[#ADB5BD] cursor-pointer"
-            >
-              <X className="w-3 h-3 text-white" strokeWidth={3} />
-            </button>
-          )}
-        </div>
-        <button
-          onClick={onQuickOrderClick}
-          className="h-10 px-4 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
-        >
-          <Zap className="w-4 h-4" strokeWidth={2.5} />
-          <span className="hidden sm:inline">빠른 주문</span>
-        </button>
-      </div>
-
-      <Row label="카테고리" collapsible>
-        {CATEGORIES.map((c) => (
-          <CheckItem key={c} label={c} checked={filter.categories.includes(c)} onChange={() => toggle('categories', c)} />
-        ))}
-      </Row>
-
-      <Row label="제약사" collapsible>
-        {SUPPLIERS.map((s) => (
-          <CheckItem key={s} label={s} checked={filter.suppliers.includes(s)} onChange={() => toggle('suppliers', s)} />
-        ))}
-      </Row>
-
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 px-5 py-3.5 border-b border-[#F1F3F5] last:border-b-0">
-        <div className="flex items-start gap-4">
-          <p className="w-16 shrink-0 text-xs font-bold text-[#212529] pt-2">가격대</p>
-          <div className="flex items-center gap-2">
+    <>
+      <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] mb-4 overflow-hidden">
+        {/* 검색바 */}
+        <div className="flex items-center gap-2 px-4 sm:px-5 py-3 sm:py-3.5 border-b border-[#F1F3F5]">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
             <input
-              type="number"
-              value={filter.priceMin}
-              onChange={(e) => onChange({ ...filter, priceMin: Number(e.target.value) || 0 })}
-              className="w-20 sm:w-28 h-9 px-2 sm:px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
-              placeholder="최소"
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="의약품명·SKU·제약사 검색"
+              className={`w-full h-10 pl-9 sm:pl-10 ${search ? 'pr-10' : 'pr-4'} text-sm bg-[#F8F9FA] rounded-lg border border-transparent focus:bg-white focus:border-[#4E7FFF] focus:outline-none transition-colors`}
             />
-            <span className="text-xs text-[#868E96]">~</span>
-            <input
-              type="number"
-              value={filter.priceMax}
-              onChange={(e) => onChange({ ...filter, priceMax: Number(e.target.value) || 0 })}
-              className="w-20 sm:w-28 h-9 px-2 sm:px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
-              placeholder="최대"
-            />
-            <span className="text-[11px] text-[#ADB5BD] ml-1">원</span>
+            {search && (
+              <button
+                type="button"
+                onClick={() => onSearchChange('')}
+                aria-label="검색어 지우기"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-[#CED4DA] hover:bg-[#ADB5BD] cursor-pointer"
+              >
+                <X className="w-3 h-3 text-white" strokeWidth={3} />
+              </button>
+            )}
           </div>
-        </div>
-        <div className="pl-20 sm:pl-0">
-          <CheckItem label="품절 제외" checked={filter.excludeSoldOut} onChange={() => onChange({ ...filter, excludeSoldOut: !filter.excludeSoldOut })} />
-        </div>
-      </div>
-
-      {anyActive && (
-        <div className="flex items-center gap-2 flex-wrap px-5 py-3 bg-[#F8F9FA] border-t border-[#F1F3F5]">
-          {activeChips.map((c) => (
-            <button
-              key={c.key}
-              onClick={c.onRemove}
-              className="inline-flex items-center gap-1 h-7 pl-3 pr-2 rounded-full bg-white border border-[#E9ECEF] text-xs text-[#495057] hover:border-[#CED4DA] cursor-pointer"
-            >
-              {c.label}
-              <X className="w-3 h-3 text-[#868E96]" strokeWidth={2.5} />
-            </button>
-          ))}
-          <div className="flex-1" />
+          {/* 모바일: 상세검색 버튼 */}
           <button
-            onClick={() => onChange(EMPTY_FILTER)}
-            className="text-xs text-[#868E96] hover:text-[#495057] underline cursor-pointer"
+            onClick={openMobileFilter}
+            className="sm:hidden h-10 px-3 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] flex items-center gap-1.5 cursor-pointer shrink-0 relative"
           >
-            모두 초기화
+            <SlidersHorizontal className="w-4 h-4" strokeWidth={2.5} />
+            {activeCount > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{activeCount}</span>}
+          </button>
+          <button
+            onClick={onQuickOrderClick}
+            className="h-10 px-4 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
+          >
+            <Zap className="w-4 h-4" strokeWidth={2.5} />
+            <span className="hidden sm:inline">빠른 주문</span>
           </button>
         </div>
+
+        {/* 모바일: 필터 칩 가로 스크롤 */}
+        <div className="sm:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto no-scrollbar border-b border-[#F1F3F5]">
+          {filter.categories.map((c) => (
+            <button key={`mc-${c}`} onClick={() => toggle('categories', c)} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
+              {c}
+              <X className="w-3 h-3" strokeWidth={2.5} />
+            </button>
+          ))}
+          {filter.suppliers.map((s) => (
+            <button key={`ms-${s}`} onClick={() => toggle('suppliers', s)} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
+              {s}
+              <X className="w-3 h-3" strokeWidth={2.5} />
+            </button>
+          ))}
+          {filter.excludeSoldOut && (
+            <button onClick={() => onChange({ ...filter, excludeSoldOut: false })} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
+              품절 제외
+              <X className="w-3 h-3" strokeWidth={2.5} />
+            </button>
+          )}
+          {anyActive && (
+            <button onClick={() => onChange(EMPTY_FILTER)} className="text-[11px] text-[#868E96] shrink-0 cursor-pointer whitespace-nowrap">초기화</button>
+          )}
+        </div>
+
+        {/* 데스크톱: 기존 필터 행 */}
+        <div className="hidden sm:block">
+          <Row label="카테고리" collapsible>
+            {CATEGORIES.map((c) => (
+              <CheckItem key={c} label={c} checked={filter.categories.includes(c)} onChange={() => toggle('categories', c)} />
+            ))}
+          </Row>
+
+          <Row label="제약사" collapsible>
+            {SUPPLIERS.map((s) => (
+              <CheckItem key={s} label={s} checked={filter.suppliers.includes(s)} onChange={() => toggle('suppliers', s)} />
+            ))}
+          </Row>
+
+          <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-b border-[#F1F3F5] last:border-b-0">
+            <div className="flex items-start gap-4">
+              <p className="w-16 shrink-0 text-xs font-bold text-[#212529] pt-2">가격대</p>
+              <div className="flex items-center gap-2">
+                <input type="number" value={filter.priceMin} onChange={(e) => onChange({ ...filter, priceMin: Number(e.target.value) || 0 })} className="w-28 h-9 px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최소" />
+                <span className="text-xs text-[#868E96]">~</span>
+                <input type="number" value={filter.priceMax} onChange={(e) => onChange({ ...filter, priceMax: Number(e.target.value) || 0 })} className="w-28 h-9 px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최대" />
+                <span className="text-[11px] text-[#ADB5BD] ml-1">원</span>
+              </div>
+            </div>
+            <CheckItem label="품절 제외" checked={filter.excludeSoldOut} onChange={() => onChange({ ...filter, excludeSoldOut: !filter.excludeSoldOut })} />
+          </div>
+
+          {anyActive && (
+            <div className="flex items-center gap-2 flex-wrap px-5 py-3 bg-[#F8F9FA] border-t border-[#F1F3F5]">
+              {activeChips.map((c) => (
+                <button key={c.key} onClick={c.onRemove} className="inline-flex items-center gap-1 h-7 pl-3 pr-2 rounded-full bg-white border border-[#E9ECEF] text-xs text-[#495057] hover:border-[#CED4DA] cursor-pointer">
+                  {c.label}
+                  <X className="w-3 h-3 text-[#868E96]" strokeWidth={2.5} />
+                </button>
+              ))}
+              <div className="flex-1" />
+              <button onClick={() => onChange(EMPTY_FILTER)} className="text-xs text-[#868E96] hover:text-[#495057] underline cursor-pointer">모두 초기화</button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 모바일 상세검색 풀스크린 모달 */}
+      {mobileOpen && (
+        <div className="sm:hidden fixed inset-0 z-[60] bg-white flex flex-col">
+          {/* 모달 헤더 */}
+          <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#F1F3F5]">
+            {mobileSection ? (
+              <button onClick={() => setMobileSection(null)} className="text-sm text-[#495057] cursor-pointer inline-flex items-center gap-1">
+                <ChevronDown className="w-4 h-4 rotate-90" strokeWidth={2} />
+                뒤로
+              </button>
+            ) : (
+              <div />
+            )}
+            <h3 className="text-sm font-bold text-[#212529]">상세검색</h3>
+            <button onClick={() => setMobileOpen(false)} className="p-1 cursor-pointer">
+              <X className="w-5 h-5 text-[#495057]" strokeWidth={2} />
+            </button>
+          </div>
+
+          {!mobileSection && (
+            <p className="text-xs text-[#868E96] text-center py-2.5 bg-[#F8F9FA] border-b border-[#F1F3F5]">
+              <span className="text-[#4E7FFF]">▼</span> 상세조건은 모든 상품에 적용됩니다.
+            </p>
+          )}
+
+          {/* 모달 본문 */}
+          <div className="flex-1 overflow-y-auto">
+            {!mobileSection ? (
+              /* 카테고리 목록 */
+              <div>
+                <MobileFilterRow label="카테고리" count={draft.categories.length} onClick={() => setMobileSection('categories')} />
+                <MobileFilterRow label="제약사" count={draft.suppliers.length} onClick={() => setMobileSection('suppliers')} />
+                <MobileFilterRow label="가격대" count={draft.priceMin > 0 || draft.priceMax !== EMPTY_FILTER.priceMax ? 1 : 0} onClick={() => setMobileSection('price')} />
+                <MobileFilterRow label="품절 제외" count={draft.excludeSoldOut ? 1 : 0} onClick={() => setDraft({ ...draft, excludeSoldOut: !draft.excludeSoldOut })} toggle checked={draft.excludeSoldOut} />
+              </div>
+            ) : mobileSection === 'categories' ? (
+              <div className="p-4 space-y-1">
+                {CATEGORIES.map((c) => (
+                  <MobileCheckItem key={c} label={c} checked={draft.categories.includes(c)} onChange={() => toggleDraft('categories', c)} />
+                ))}
+              </div>
+            ) : mobileSection === 'suppliers' ? (
+              <div className="p-4 space-y-1">
+                {SUPPLIERS.map((s) => (
+                  <MobileCheckItem key={s} label={s} checked={draft.suppliers.includes(s)} onChange={() => toggleDraft('suppliers', s)} />
+                ))}
+              </div>
+            ) : mobileSection === 'price' ? (
+              <div className="p-4">
+                <p className="text-xs text-[#868E96] mb-3">가격 범위를 입력하세요 (원)</p>
+                <div className="flex items-center gap-3">
+                  <input type="number" value={draft.priceMin} onChange={(e) => setDraft({ ...draft, priceMin: Number(e.target.value) || 0 })} className="flex-1 h-11 px-3 text-sm bg-white rounded-lg border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최소" />
+                  <span className="text-sm text-[#868E96]">~</span>
+                  <input type="number" value={draft.priceMax} onChange={(e) => setDraft({ ...draft, priceMax: Number(e.target.value) || 0 })} className="flex-1 h-11 px-3 text-sm bg-white rounded-lg border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최대" />
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* 모달 하단 버튼 */}
+          <div className="flex items-center gap-3 px-4 py-3 border-t border-[#E9ECEF] bg-white">
+            <button onClick={() => setDraft(EMPTY_FILTER)} className="h-12 px-5 rounded-lg border border-[#DEE2E6] text-sm font-semibold text-[#495057] cursor-pointer">
+              초기화
+            </button>
+            <button onClick={applyMobileFilter} className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-sm font-semibold cursor-pointer">
+              {resultCount}건 상품보기
+            </button>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
+/* ── 데스크톱 Row ── */
 function Row({ label, children, collapsible = false }: { label: string; children: React.ReactNode; collapsible?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [overflows, setOverflows] = useState(false);
@@ -179,10 +282,7 @@ function Row({ label, children, collapsible = false }: { label: string; children
         {children}
       </div>
       {collapsible && overflows && (
-        <button
-          onClick={() => setExpanded((v) => !v)}
-          className="shrink-0 flex items-center gap-0.5 text-xs text-[#868E96] hover:text-[#495057] pt-2 cursor-pointer whitespace-nowrap"
-        >
+        <button onClick={() => setExpanded((v) => !v)} className="shrink-0 flex items-center gap-0.5 text-xs text-[#868E96] hover:text-[#495057] pt-2 cursor-pointer whitespace-nowrap">
           {expanded ? '접기' : '펼치기'}
           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} strokeWidth={2.5} />
         </button>
@@ -191,26 +291,11 @@ function Row({ label, children, collapsible = false }: { label: string; children
   );
 }
 
-function CheckItem({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: () => void;
-}) {
+/* ── 데스크톱 체크 아이템 ── */
+function CheckItem({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <button
-      type="button"
-      onClick={onChange}
-      className="inline-flex items-center gap-1.5 cursor-pointer select-none py-1 pr-4"
-    >
-      <span
-        className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${
-          checked ? 'bg-[#4E7FFF] border-[#4E7FFF]' : 'bg-white border-[#DEE2E6]'
-        }`}
-      >
+    <button type="button" onClick={onChange} className="inline-flex items-center gap-1.5 cursor-pointer select-none py-1 pr-4">
+      <span className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${checked ? 'bg-[#4E7FFF] border-[#4E7FFF]' : 'bg-white border-[#DEE2E6]'}`}>
         {checked && (
           <svg viewBox="0 0 16 16" className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="3 8 7 12 13 4" />
@@ -218,6 +303,41 @@ function CheckItem({
         )}
       </span>
       <span className={`text-sm ${checked ? 'text-[#212529]' : 'text-[#495057]'}`}>{label}</span>
+    </button>
+  );
+}
+
+/* ── 모바일 필터 행 ── */
+function MobileFilterRow({ label, count, onClick, toggle, checked }: { label: string; count: number; onClick: () => void; toggle?: boolean; checked?: boolean }) {
+  return (
+    <button onClick={onClick} className="w-full flex items-center justify-between px-5 py-4 border-b border-[#F1F3F5] cursor-pointer active:bg-[#F8F9FA]">
+      <div className="flex items-center gap-2">
+        <span className="text-sm font-semibold text-[#212529]">{label}</span>
+        {count > 0 && !toggle && <span className="text-xs text-[#4E7FFF] font-bold">{count}개</span>}
+      </div>
+      {toggle ? (
+        <span className={`w-10 h-6 rounded-full transition-colors relative ${checked ? 'bg-[#4E7FFF]' : 'bg-[#DEE2E6]'}`}>
+          <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-1'}`} />
+        </span>
+      ) : (
+        <ChevronRight className="w-4 h-4 text-[#ADB5BD]" strokeWidth={2} />
+      )}
+    </button>
+  );
+}
+
+/* ── 모바일 체크 아이템 (큰 터치 영역) ── */
+function MobileCheckItem({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
+  return (
+    <button type="button" onClick={onChange} className="w-full flex items-center gap-3 py-3 px-1 cursor-pointer active:bg-[#F8F9FA] rounded-lg">
+      <span className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${checked ? 'bg-[#4E7FFF] border-[#4E7FFF]' : 'bg-white border-[#DEE2E6]'}`}>
+        {checked && (
+          <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="3 8 7 12 13 4" />
+          </svg>
+        )}
+      </span>
+      <span className={`text-sm ${checked ? 'text-[#212529] font-semibold' : 'text-[#495057]'}`}>{label}</span>
     </button>
   );
 }
