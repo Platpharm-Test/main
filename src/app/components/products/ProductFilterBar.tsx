@@ -99,7 +99,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           <button
             type="button"
             onClick={() => navigate('/products/search')}
-            className="sm:hidden flex-1 relative h-10 pl-10 pr-4 text-sm bg-[#F8F9FA] rounded-lg border border-transparent flex items-center text-left cursor-pointer"
+            className="lg:hidden flex-1 relative h-10 pl-10 pr-4 text-sm bg-[#F8F9FA] rounded-lg border border-transparent flex items-center text-left cursor-pointer"
           >
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
             {search ? (
@@ -121,7 +121,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           </button>
 
           {/* 데스크톱: 실제 검색 입력 */}
-          <div className="hidden sm:block relative flex-1">
+          <div className="hidden lg:block relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
             <input
               value={search}
@@ -143,7 +143,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           {/* 모바일: 상세검색 버튼 */}
           <button
             onClick={openMobileFilter}
-            className="sm:hidden h-10 px-3 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] flex items-center gap-1.5 cursor-pointer shrink-0 relative"
+            className="lg:hidden h-10 px-3 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] flex items-center gap-1.5 cursor-pointer shrink-0 relative"
           >
             <SlidersHorizontal className="w-4 h-4" strokeWidth={2.5} />
             {activeCount > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{activeCount}</span>}
@@ -153,12 +153,12 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
             className="h-10 px-4 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
           >
             <Zap className="w-4 h-4" strokeWidth={2.5} />
-            <span className="hidden sm:inline">빠른 주문</span>
+            <span className="hidden lg:inline">빠른 주문</span>
           </button>
         </div>
 
         {/* 모바일: 필터 칩 가로 스크롤 */}
-        <div className="sm:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto no-scrollbar border-b border-[#F1F3F5]">
+        <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 overflow-x-auto no-scrollbar border-b border-[#F1F3F5]">
           {filter.categories.map((c) => (
             <button key={`mc-${c}`} onClick={() => toggle('categories', c)} className="inline-flex items-center gap-1 h-7 pl-2.5 pr-1.5 rounded-full bg-[#EDF2FF] text-[11px] font-semibold text-[#4E7FFF] shrink-0 cursor-pointer">
               {c}
@@ -183,7 +183,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
         </div>
 
         {/* 데스크톱: 기존 필터 행 */}
-        <div className="hidden sm:block">
+        <div className="hidden lg:block">
           <Row label="카테고리" collapsible>
             {CATEGORIES.map((c) => (
               <CheckItem key={c} label={c} checked={filter.categories.includes(c)} onChange={() => toggle('categories', c)} />
@@ -227,11 +227,11 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
       {/* 모바일 바텀시트 오버레이 */}
       <div
         onClick={() => setMobileOpen(false)}
-        className={`sm:hidden fixed inset-0 z-[55] bg-black/40 transition-opacity duration-300 ${mobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`lg:hidden fixed inset-0 z-[55] bg-black/40 transition-opacity duration-300 ${mobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       />
 
       {/* 모바일 바텀시트 */}
-      <div className={`sm:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out overflow-hidden ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
+      <div className={`lg:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out overflow-hidden ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
         {/* 헤더 */}
         <div className="flex items-center justify-between px-5 pt-4 pb-3">
           {mobileSection ? (

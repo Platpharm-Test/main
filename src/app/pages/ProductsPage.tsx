@@ -102,7 +102,7 @@ function ProductsPageInner() {
         <div className="max-w-[1400px] mx-auto">
           {/* 페이지 헤더 */}
           {/* 모바일 헤더: 심플 */}
-          <div className="mb-3 sm:hidden">
+          <div className="mb-3 lg:hidden">
             <div className="flex items-center justify-between gap-2">
               <h2 className="text-base font-bold text-[#212529]">전체 상품 <span className="text-[#868E96] font-medium">{PRODUCTS.length}</span></h2>
               <button className="h-8 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] cursor-pointer">
@@ -112,7 +112,7 @@ function ProductsPageInner() {
           </div>
 
           {/* 데스크톱 헤더 */}
-          <div className="mb-4 hidden sm:block">
+          <div className="mb-4 hidden lg:block">
             <p className="text-xs text-[#868E96] mb-1">
               <button onClick={() => navigate('/1')} className="hover:underline cursor-pointer">의약품 구매</button>
               <span className="mx-1.5">/</span>

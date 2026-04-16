@@ -10,7 +10,7 @@ interface ProductRowProps {
   onClick?: () => void;
 }
 
-const ROW_GRID = 'hidden md:grid grid-cols-[40px_minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4';
+const ROW_GRID = 'hidden lg:grid grid-cols-[40px_minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4';
 
 export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: ProductRowProps) {
   const [qty, setQty] = useState(product.moq);
@@ -75,7 +75,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
       </div>
 
       {/* 모바일: 컴팩트 카드형 */}
-      <div className="md:hidden px-4 py-3">
+      <div className="lg:hidden px-4 py-3">
         <div className="flex gap-3">
           <ProductImage form={product.form} category={product.category} name={product.name} code={product.code} image={product.image} size="sm" />
           <div className="min-w-0 flex-1">
@@ -116,7 +116,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
 
 export function ProductRowHeader() {
   return (
-    <div className={`hidden md:grid grid-cols-[40px_minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4 px-4 py-2.5 bg-[#F8F9FA] border-b border-[#E9ECEF] text-[11px] font-bold text-[#495057]`}>
+    <div className={`hidden lg:grid grid-cols-[40px_minmax(160px,2fr)_100px_88px_72px_108px_108px_80px] items-center gap-x-4 px-4 py-2.5 bg-[#F8F9FA] border-b border-[#E9ECEF] text-[11px] font-bold text-[#495057]`}>
       <span></span>
       <span>상품명</span>
       <span>약제코드</span>
