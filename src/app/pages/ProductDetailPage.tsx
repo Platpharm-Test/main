@@ -84,16 +84,16 @@ function ProductDetailInner() {
             <div className="space-y-5">
 
               {/* 상품 헤더 카드 */}
-              <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6">
-                <div className="flex gap-5 mb-4">
+              <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 mb-4">
                   {/* 상품 이미지 */}
-                  <div className="shrink-0">
+                  <div className="shrink-0 flex justify-center sm:justify-start">
                     <ProductImage form={product.form} category={product.category} name={product.name} image={product.image} size="lg" />
                   </div>
 
                   {/* 상품 정보 */}
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-start justify-between gap-4 mb-2">
+                    <div className="flex items-start justify-between gap-3 mb-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="px-2 py-0.5 rounded bg-[#F1F3F5] text-[11px] font-semibold text-[#495057]">{product.category}</span>
                         {product.newArrival && <span className="px-2 py-0.5 rounded bg-[#FFF3BF] text-[11px] font-bold text-[#E67700]">신규</span>}
@@ -190,75 +190,34 @@ function ProductDetailInner() {
               )}
             </div>
 
-            {/* 오른쪽: 주문 패널 (sticky) */}
-            <div className="lg:sticky lg:top-[72px] lg:self-start">
+            {/* 오른쪽: 주문 패널 (데스크톱 사이드) */}
+            <div className="hidden lg:block lg:sticky lg:top-[72px] lg:self-start">
               <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-5">
-
-                {/* 가격 */}
                 <div className="mb-5">
                   <p className="text-xs text-[#868E96] mb-1">{product.packLabel} 기준</p>
-                  <p className={`text-2xl font-bold tabular-nums ${disabled ? 'text-[#ADB5BD]' : 'text-[#212529]'}`}>
-                    ₩{price.toLocaleString()}
-                  </p>
+                  <p className={`text-2xl font-bold tabular-nums ${disabled ? 'text-[#ADB5BD]' : 'text-[#212529]'}`}>₩{price.toLocaleString()}</p>
                 </div>
-
                 <div className="border-t border-[#F1F3F5] pt-5">
                   {disabled ? (
-                    /* 품절 — 재입고 알림 */
-                    <button
-                      onClick={() => {
-                        setNotified((v) => !v);
-                        toast.show(notified ? '재입고 알림이 취소되었습니다' : '재입고 시 알림을 보내드립니다');
-                      }}
-                      className={`w-full h-11 rounded-lg border text-sm font-semibold inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${
-                        notified
-                          ? 'bg-[#4E7FFF] border-[#4E7FFF] text-white hover:bg-[#3D6FEF]'
-                          : 'bg-white border-[#DEE2E6] text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF]'
-                      }`}
-                    >
+                    <button onClick={() => { setNotified((v) => !v); toast.show(notified ? '재입고 알림이 취소되었습니다' : '재입고 시 알림을 보내드립니다'); }} className={`w-full h-11 rounded-lg border text-sm font-semibold inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${notified ? 'bg-[#4E7FFF] border-[#4E7FFF] text-white hover:bg-[#3D6FEF]' : 'bg-white border-[#DEE2E6] text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF]'}`}>
                       {notified ? <BellRing className="w-4 h-4" strokeWidth={2.5} /> : <Bell className="w-4 h-4" strokeWidth={2} />}
                       {notified ? '알림 신청됨' : '재입고 알림 신청'}
                     </button>
                   ) : (
                     <>
-                      {/* 수량 선택 */}
                       <div className="flex items-center justify-between mb-4">
                         <span className="text-sm font-semibold text-[#212529]">수량</span>
                         <div className="flex items-center border border-[#DEE2E6] rounded-lg h-10 bg-white">
-                          <button
-                            onClick={() => setQty(Math.max(product.moq, qty - 1))}
-                            className="w-9 h-full flex items-center justify-center text-[#868E96] hover:text-[#212529] cursor-pointer"
-                          >
-                            <Minus className="w-4 h-4" strokeWidth={2} />
-                          </button>
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            value={qty}
-                            onChange={(e) => setQty(Math.max(product.moq, Number(e.target.value.replace(/[^0-9]/g, '')) || product.moq))}
-                            className="w-12 h-full text-center text-sm font-semibold text-[#212529] outline-none border-x border-[#DEE2E6] tabular-nums bg-transparent"
-                          />
-                          <button
-                            onClick={() => setQty(qty + 1)}
-                            className="w-9 h-full flex items-center justify-center text-[#868E96] hover:text-[#212529] cursor-pointer"
-                          >
-                            <Plus className="w-4 h-4" strokeWidth={2} />
-                          </button>
+                          <button onClick={() => setQty(Math.max(product.moq, qty - 1))} className="w-9 h-full flex items-center justify-center text-[#868E96] hover:text-[#212529] cursor-pointer"><Minus className="w-4 h-4" strokeWidth={2} /></button>
+                          <input type="text" inputMode="numeric" pattern="[0-9]*" value={qty} onChange={(e) => setQty(Math.max(product.moq, Number(e.target.value.replace(/[^0-9]/g, '')) || product.moq))} className="w-12 h-full text-center text-sm font-semibold text-[#212529] outline-none border-x border-[#DEE2E6] tabular-nums bg-transparent" />
+                          <button onClick={() => setQty(qty + 1)} className="w-9 h-full flex items-center justify-center text-[#868E96] hover:text-[#212529] cursor-pointer"><Plus className="w-4 h-4" strokeWidth={2} /></button>
                         </div>
                       </div>
-
-                      {/* 합계 */}
                       <div className="flex items-center justify-between mb-5 py-3 px-4 bg-[#F8F9FA] rounded-lg">
                         <span className="text-sm text-[#495057]">합계</span>
                         <span className="text-lg font-bold text-[#212529] tabular-nums">₩{totalPrice.toLocaleString()}</span>
                       </div>
-
-                      {/* 장바구니 담기 */}
-                      <button
-                        onClick={addToCart}
-                        className="w-full h-11 rounded-lg bg-[#4E7FFF] hover:bg-[#3D6FEF] text-white text-sm font-semibold cursor-pointer transition-colors inline-flex items-center justify-center gap-2"
-                      >
+                      <button onClick={addToCart} className="w-full h-11 rounded-lg bg-[#4E7FFF] hover:bg-[#3D6FEF] text-white text-sm font-semibold cursor-pointer transition-colors inline-flex items-center justify-center gap-2">
                         <ShoppingCart className="w-4 h-4" strokeWidth={2.5} />
                         장바구니 담기
                       </button>
@@ -270,6 +229,34 @@ function ProductDetailInner() {
           </div>
         </div>
       </main>
+
+      {/* 모바일: 하단 고정 주문 바 */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E9ECEF] px-4 py-3 safe-area-pb">
+        {disabled ? (
+          <button onClick={() => { setNotified((v) => !v); toast.show(notified ? '재입고 알림이 취소되었습니다' : '재입고 시 알림을 보내드립니다'); }} className={`w-full h-12 rounded-lg border text-sm font-semibold inline-flex items-center justify-center gap-2 cursor-pointer transition-colors ${notified ? 'bg-[#4E7FFF] border-[#4E7FFF] text-white' : 'bg-white border-[#DEE2E6] text-[#495057]'}`}>
+            {notified ? <BellRing className="w-4 h-4" strokeWidth={2.5} /> : <Bell className="w-4 h-4" strokeWidth={2} />}
+            {notified ? '알림 신청됨' : '재입고 알림 신청'}
+          </button>
+        ) : (
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <p className="text-lg font-bold text-[#212529] tabular-nums whitespace-nowrap">₩{totalPrice.toLocaleString()}</p>
+              <div className="flex items-center border border-[#DEE2E6] rounded-lg h-10 bg-white shrink-0">
+                <button onClick={() => setQty(Math.max(product.moq, qty - 1))} className="w-8 h-full flex items-center justify-center text-[#868E96] cursor-pointer"><Minus className="w-3.5 h-3.5" strokeWidth={2} /></button>
+                <input type="text" inputMode="numeric" value={qty} onChange={(e) => setQty(Math.max(product.moq, Number(e.target.value.replace(/[^0-9]/g, '')) || product.moq))} className="w-10 h-full text-center text-sm font-semibold text-[#212529] outline-none border-x border-[#DEE2E6] tabular-nums bg-transparent" />
+                <button onClick={() => setQty(qty + 1)} className="w-8 h-full flex items-center justify-center text-[#868E96] cursor-pointer"><Plus className="w-3.5 h-3.5" strokeWidth={2} /></button>
+              </div>
+            </div>
+            <button onClick={addToCart} className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-sm font-semibold cursor-pointer inline-flex items-center justify-center gap-2">
+              <ShoppingCart className="w-4 h-4" strokeWidth={2.5} />
+              담기
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* 모바일 하단 바 높이만큼 여백 */}
+      <div className="lg:hidden h-20" />
 
     </div>
   );

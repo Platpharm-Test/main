@@ -107,17 +107,18 @@ function ProductsPageInner() {
               <span className="mx-1.5">/</span>
               <span>전체 상품</span>
             </p>
-            <div className="flex items-end justify-between gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-3">
               <div>
-                <h2 className="text-xl font-bold text-[#212529]">전체 상품</h2>
-                <p className="text-xs text-[#868E96] mt-1">등록된 {PRODUCTS.length}개 의약품 · 10개 제약사</p>
+                <h2 className="text-lg sm:text-xl font-bold text-[#212529]">전체 상품</h2>
+                <p className="text-xs text-[#868E96] mt-0.5">등록된 {PRODUCTS.length}개 의약품 · 10개 제약사</p>
               </div>
               <div className="flex items-center gap-2">
-                <button className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
+                <button className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
                   <FileText className="w-3.5 h-3.5" strokeWidth={2.5} />
-                  발주서 작성
+                  <span className="hidden sm:inline">발주서 작성</span>
+                  <span className="sm:hidden">발주서</span>
                 </button>
-                <button className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
+                <button className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
                   <ShoppingCart className="w-3.5 h-3.5" strokeWidth={2.5} />
                   장바구니
                   {cartKindCount > 0 && <span className="px-1.5 py-0.5 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full">{cartKindCount}</span>}

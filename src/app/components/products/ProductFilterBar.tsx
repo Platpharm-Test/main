@@ -84,7 +84,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           className="h-10 px-4 rounded-lg border border-[#DEE2E6] bg-white text-sm font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] transition-colors flex items-center gap-1.5 cursor-pointer shrink-0"
         >
           <Zap className="w-4 h-4" strokeWidth={2.5} />
-          빠른 주문
+          <span className="hidden sm:inline">빠른 주문</span>
         </button>
       </div>
 
@@ -100,7 +100,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
         ))}
       </Row>
 
-      <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-b border-[#F1F3F5] last:border-b-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 px-5 py-3.5 border-b border-[#F1F3F5] last:border-b-0">
         <div className="flex items-start gap-4">
           <p className="w-16 shrink-0 text-xs font-bold text-[#212529] pt-2">가격대</p>
           <div className="flex items-center gap-2">
@@ -108,7 +108,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
               type="number"
               value={filter.priceMin}
               onChange={(e) => onChange({ ...filter, priceMin: Number(e.target.value) || 0 })}
-              className="w-28 h-9 px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
+              className="w-20 sm:w-28 h-9 px-2 sm:px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
               placeholder="최소"
             />
             <span className="text-xs text-[#868E96]">~</span>
@@ -116,13 +116,15 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
               type="number"
               value={filter.priceMax}
               onChange={(e) => onChange({ ...filter, priceMax: Number(e.target.value) || 0 })}
-              className="w-28 h-9 px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
+              className="w-20 sm:w-28 h-9 px-2 sm:px-2.5 text-xs bg-white rounded border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums"
               placeholder="최대"
             />
             <span className="text-[11px] text-[#ADB5BD] ml-1">원</span>
           </div>
         </div>
-        <CheckItem label="품절 제외" checked={filter.excludeSoldOut} onChange={() => onChange({ ...filter, excludeSoldOut: !filter.excludeSoldOut })} />
+        <div className="pl-20 sm:pl-0">
+          <CheckItem label="품절 제외" checked={filter.excludeSoldOut} onChange={() => onChange({ ...filter, excludeSoldOut: !filter.excludeSoldOut })} />
+        </div>
       </div>
 
       {anyActive && (

@@ -35,12 +35,12 @@ export function ProductResultHeader({
 
   return (
     <div className="mb-3">
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <p className="text-sm text-[#495057]">
+      <div className="flex items-center justify-between gap-2 sm:gap-3 mb-3">
+        <p className="text-xs sm:text-sm text-[#495057]">
           결과 <span className="font-bold text-[#212529]">{count}</span>건
         </p>
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-white border border-[#DEE2E6] rounded-md overflow-hidden">
+          <div className="hidden sm:flex items-center bg-white border border-[#DEE2E6] rounded-md overflow-hidden">
             <button
               onClick={() => onViewChange('list')}
               className={`p-1.5 cursor-pointer transition-colors ${view === 'list' ? 'bg-[#212529] text-white' : 'text-[#495057] hover:bg-[#F8F9FA]'}`}
@@ -65,7 +65,7 @@ export function ProductResultHeader({
               <ChevronDown className="w-3 h-3" strokeWidth={2.5} />
             </button>
             {sortOpen && (
-              <div className="absolute right-0 mt-1 w-32 bg-white border border-[#DEE2E6] rounded-md shadow-lg z-10 overflow-hidden">
+              <div className="absolute right-0 mt-1 w-32 bg-white border border-[#DEE2E6] rounded-md shadow-lg z-20 overflow-hidden">
                 {SORT_OPTIONS.map((s) => (
                   <button
                     key={s}
