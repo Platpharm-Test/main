@@ -115,9 +115,9 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
       </button>
 
       {/* 모바일 사용자 정보 */}
-      <div className="lg:hidden flex items-center gap-2 px-5 py-4 border-b border-white/10">
-        <span className="text-sm font-bold text-white">서울연세약국님</span>
-        <span className="px-2 py-0.5 bg-[#4E7FFF]/20 text-[#8BADFF] text-[10px] font-semibold rounded">개국약사</span>
+      <div className="lg:hidden flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
+        <span className="text-[17px] font-bold text-white">서울연세약국님</span>
+        <span className="px-2 py-0.5 bg-[#4E7FFF]/20 text-[#8BADFF] text-[12px] font-semibold rounded">개국약사</span>
       </div>
 
       {/* 모바일: 섹션 제목 + 플랫 리스트 */}
@@ -127,7 +127,7 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
       >
         {menuSections.map((section, sectionIndex) => (
           <div key={sectionIndex} className="pt-5">
-            <p className="px-5 pb-2 text-[11px] text-white/40 font-medium">{section.title}</p>
+            <p className="px-5 pb-2 text-[13px] text-white/50 font-medium">{section.title}</p>
             <div>
               {section.items.map((item, itemIndex) => {
                 const active = isActive(item);
@@ -136,15 +136,15 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
                     key={itemIndex}
                     onClick={() => handleItemClick(item)}
                     className={`
-                      w-full flex items-center justify-between px-5 py-4 transition-colors cursor-pointer
+                      w-full flex items-center justify-between px-5 py-[14px] transition-colors cursor-pointer
                       ${active
                         ? 'bg-white/5 text-[#8BADFF] font-bold'
                         : 'text-white hover:bg-white/5 font-bold'
                       }
                     `}
                   >
-                    <span className="text-sm">{item.name}</span>
-                    <ChevronRight className="w-4 h-4 text-white/40" strokeWidth={2} />
+                    <span className="text-[16px]">{item.name}</span>
+                    <ChevronRight className="w-5 h-5 text-white/40" strokeWidth={2} />
                   </button>
                 );
               })}
@@ -198,8 +198,8 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
 
       {/* 모바일 로그아웃 */}
       <div className="lg:hidden border-t border-white/10 px-5 py-4">
-        <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-white/20 text-sm font-semibold text-white/90 hover:bg-white/10 transition-colors cursor-pointer">
-          <LogOut className="w-4 h-4" strokeWidth={2} />
+        <button className="w-full flex items-center justify-center gap-2 py-3 rounded-lg border border-white/20 text-[15px] font-semibold text-white/90 hover:bg-white/10 transition-colors cursor-pointer">
+          <LogOut className="w-[18px] h-[18px]" strokeWidth={2} />
           로그아웃
         </button>
       </div>
