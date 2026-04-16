@@ -180,76 +180,93 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
         </div>
       </div>
 
-      {/* 모바일 상세검색 풀스크린 모달 */}
-      {mobileOpen && (
-        <div className="sm:hidden fixed inset-0 z-[60] bg-white flex flex-col">
-          {/* 모달 헤더 */}
-          <div className="flex items-center justify-between px-4 py-3.5 border-b border-[#F1F3F5]">
-            {mobileSection ? (
-              <button onClick={() => setMobileSection(null)} className="text-sm text-[#495057] cursor-pointer inline-flex items-center gap-1">
-                <ChevronDown className="w-4 h-4 rotate-90" strokeWidth={2} />
-                뒤로
-              </button>
-            ) : (
-              <div />
-            )}
-            <h3 className="text-sm font-bold text-[#212529]">상세검색</h3>
-            <button onClick={() => setMobileOpen(false)} className="p-1 cursor-pointer">
-              <X className="w-5 h-5 text-[#495057]" strokeWidth={2} />
-            </button>
-          </div>
+      {/* 모바일 바텀시트 오버레이 */}
+      <div
+        onClick={() => setMobileOpen(false)}
+        className={`sm:hidden fixed inset-0 z-[55] bg-black/40 transition-opacity duration-300 ${mobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      />
 
-          {!mobileSection && (
-            <p className="text-xs text-[#868E96] text-center py-2.5 bg-[#F8F9FA] border-b border-[#F1F3F5]">
-              <span className="text-[#4E7FFF]">▼</span> 상세조건은 모든 상품에 적용됩니다.
-            </p>
-          )}
-
-          {/* 모달 본문 */}
-          <div className="flex-1 overflow-y-auto">
-            {!mobileSection ? (
-              /* 카테고리 목록 */
-              <div>
-                <MobileFilterRow label="카테고리" count={draft.categories.length} onClick={() => setMobileSection('categories')} />
-                <MobileFilterRow label="제약사" count={draft.suppliers.length} onClick={() => setMobileSection('suppliers')} />
-                <MobileFilterRow label="가격대" count={draft.priceMin > 0 || draft.priceMax !== EMPTY_FILTER.priceMax ? 1 : 0} onClick={() => setMobileSection('price')} />
-                <MobileFilterRow label="품절 제외" count={draft.excludeSoldOut ? 1 : 0} onClick={() => setDraft({ ...draft, excludeSoldOut: !draft.excludeSoldOut })} toggle checked={draft.excludeSoldOut} />
-              </div>
-            ) : mobileSection === 'categories' ? (
-              <div className="p-4 space-y-1">
-                {CATEGORIES.map((c) => (
-                  <MobileCheckItem key={c} label={c} checked={draft.categories.includes(c)} onChange={() => toggleDraft('categories', c)} />
-                ))}
-              </div>
-            ) : mobileSection === 'suppliers' ? (
-              <div className="p-4 space-y-1">
-                {SUPPLIERS.map((s) => (
-                  <MobileCheckItem key={s} label={s} checked={draft.suppliers.includes(s)} onChange={() => toggleDraft('suppliers', s)} />
-                ))}
-              </div>
-            ) : mobileSection === 'price' ? (
-              <div className="p-4">
-                <p className="text-xs text-[#868E96] mb-3">가격 범위를 입력하세요 (원)</p>
-                <div className="flex items-center gap-3">
-                  <input type="number" value={draft.priceMin} onChange={(e) => setDraft({ ...draft, priceMin: Number(e.target.value) || 0 })} className="flex-1 h-11 px-3 text-sm bg-white rounded-lg border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최소" />
-                  <span className="text-sm text-[#868E96]">~</span>
-                  <input type="number" value={draft.priceMax} onChange={(e) => setDraft({ ...draft, priceMax: Number(e.target.value) || 0 })} className="flex-1 h-11 px-3 text-sm bg-white rounded-lg border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최대" />
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          {/* 모달 하단 버튼 */}
-          <div className="flex items-center gap-3 px-4 py-3 border-t border-[#E9ECEF] bg-white">
-            <button onClick={() => setDraft(EMPTY_FILTER)} className="h-12 px-5 rounded-lg border border-[#DEE2E6] text-sm font-semibold text-[#495057] cursor-pointer">
-              초기화
-            </button>
-            <button onClick={applyMobileFilter} className="flex-1 h-12 rounded-lg bg-[#4E7FFF] text-white text-sm font-semibold cursor-pointer">
-              {resultCount}건 상품보기
-            </button>
-          </div>
+      {/* 모바일 바텀시트 */}
+      <div className={`sm:hidden fixed inset-x-0 bottom-0 z-[60] bg-white rounded-t-2xl flex flex-col transition-transform duration-300 ease-out ${mobileOpen ? 'translate-y-0' : 'translate-y-full'}`} style={{ maxHeight: '85vh' }}>
+        {/* 핸들 */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-[#DEE2E6]" />
         </div>
-      )}
+
+        {/* 헤더 */}
+        <div className="flex items-center justify-between px-5 pb-3">
+          {mobileSection ? (
+            <button onClick={() => setMobileSection(null)} className="text-sm text-[#495057] cursor-pointer inline-flex items-center gap-1">
+              <ChevronDown className="w-4 h-4 rotate-90" strokeWidth={2} />
+            </button>
+          ) : (
+            <div className="w-6" />
+          )}
+          <h3 className="text-[15px] font-bold text-[#212529]">{mobileSection === 'categories' ? '카테고리' : mobileSection === 'suppliers' ? '제약사' : mobileSection === 'price' ? '가격대' : '상세검색'}</h3>
+          <button onClick={() => setMobileOpen(false)} className="p-0.5 cursor-pointer">
+            <X className="w-5 h-5 text-[#868E96]" strokeWidth={1.5} />
+          </button>
+        </div>
+
+        {!mobileSection && (
+          <div className="text-[13px] text-[#868E96] text-center py-2.5 bg-[#F8F9FA] border-y border-[#F1F3F5]">
+            <span className="text-[#4E7FFF]">▼</span> 상세조건은 모든 상품에 적용됩니다.
+          </div>
+        )}
+
+        {/* 본문 */}
+        <div className="flex-1 overflow-y-auto overscroll-contain">
+          {!mobileSection ? (
+            <div className="py-2">
+              <MobileFilterRow label="카테고리" count={draft.categories.length} onClick={() => setMobileSection('categories')} />
+              <MobileFilterRow label="제약사" count={draft.suppliers.length} onClick={() => setMobileSection('suppliers')} />
+              <MobileFilterRow label="가격대" count={draft.priceMin > 0 || draft.priceMax !== EMPTY_FILTER.priceMax ? 1 : 0} onClick={() => setMobileSection('price')} />
+              <MobileFilterRow label="품절 제외" count={0} onClick={() => setDraft({ ...draft, excludeSoldOut: !draft.excludeSoldOut })} toggle checked={draft.excludeSoldOut} />
+            </div>
+          ) : mobileSection === 'categories' ? (
+            <div className="py-1">
+              {CATEGORIES.map((c) => (
+                <MobileCheckItem key={c} label={c} checked={draft.categories.includes(c)} onChange={() => toggleDraft('categories', c)} />
+              ))}
+            </div>
+          ) : mobileSection === 'suppliers' ? (
+            <div className="py-1">
+              {SUPPLIERS.map((s) => (
+                <MobileCheckItem key={s} label={s} checked={draft.suppliers.includes(s)} onChange={() => toggleDraft('suppliers', s)} />
+              ))}
+            </div>
+          ) : mobileSection === 'price' ? (
+            <div className="px-5 py-5">
+              <p className="text-[13px] text-[#868E96] mb-4">가격 범위를 입력하세요 (원)</p>
+              <div className="flex items-center gap-3">
+                <input type="number" value={draft.priceMin} onChange={(e) => setDraft({ ...draft, priceMin: Number(e.target.value) || 0 })} className="flex-1 h-12 px-4 text-sm bg-white rounded-xl border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최소" />
+                <span className="text-sm text-[#ADB5BD]">~</span>
+                <input type="number" value={draft.priceMax} onChange={(e) => setDraft({ ...draft, priceMax: Number(e.target.value) || 0 })} className="flex-1 h-12 px-4 text-sm bg-white rounded-xl border border-[#DEE2E6] focus:border-[#4E7FFF] focus:outline-none tabular-nums" placeholder="최대" />
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        {/* 선택 카운트 (drill-down일 때) */}
+        {mobileSection && mobileSection !== 'price' && (
+          <div className="px-5 py-2 border-t border-[#F1F3F5]">
+            <p className="text-[13px] text-[#495057]">
+              선택한 {mobileSection === 'categories' ? '카테고리' : '제약사'}{' '}
+              <span className="font-bold text-[#4E7FFF]">{mobileSection === 'categories' ? draft.categories.length : draft.suppliers.length}</span>
+            </p>
+          </div>
+        )}
+
+        {/* 하단 버튼 */}
+        <div className="flex items-center gap-3 px-5 py-4 border-t border-[#E9ECEF]">
+          <button onClick={() => { if (mobileSection) { if (mobileSection === 'categories') setDraft({ ...draft, categories: [] }); else if (mobileSection === 'suppliers') setDraft({ ...draft, suppliers: [] }); else if (mobileSection === 'price') setDraft({ ...draft, priceMin: 0, priceMax: 10000 }); } else { setDraft(EMPTY_FILTER); } }} className="h-[50px] px-6 rounded-xl border border-[#DEE2E6] text-[15px] font-semibold text-[#495057] cursor-pointer">
+            초기화
+          </button>
+          <button onClick={() => { if (mobileSection) setMobileSection(null); else applyMobileFilter(); }} className="flex-1 h-[50px] rounded-xl bg-[#4E7FFF] text-white text-[15px] font-semibold cursor-pointer">
+            {mobileSection ? '선택완료' : `${resultCount}건 상품보기`}
+          </button>
+        </div>
+      </div>
     </>
   );
 }
@@ -310,34 +327,32 @@ function CheckItem({ label, checked, onChange }: { label: string; checked: boole
 /* ── 모바일 필터 행 ── */
 function MobileFilterRow({ label, count, onClick, toggle, checked }: { label: string; count: number; onClick: () => void; toggle?: boolean; checked?: boolean }) {
   return (
-    <button onClick={onClick} className="w-full flex items-center justify-between px-5 py-4 border-b border-[#F1F3F5] cursor-pointer active:bg-[#F8F9FA]">
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-semibold text-[#212529]">{label}</span>
-        {count > 0 && !toggle && <span className="text-xs text-[#4E7FFF] font-bold">{count}개</span>}
+    <button onClick={onClick} className="w-full flex items-center justify-between px-5 py-[18px] border-b border-[#F1F3F5] cursor-pointer active:bg-[#F8F9FA]">
+      <div className="flex items-center gap-2.5">
+        <span className="text-[15px] font-bold text-[#212529]">{label}</span>
+        {count > 0 && !toggle && <span className="text-[13px] text-[#4E7FFF] font-semibold">{count}개</span>}
       </div>
       {toggle ? (
-        <span className={`w-10 h-6 rounded-full transition-colors relative ${checked ? 'bg-[#4E7FFF]' : 'bg-[#DEE2E6]'}`}>
-          <span className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-5' : 'translate-x-1'}`} />
+        <span className={`w-11 h-[26px] rounded-full transition-colors relative ${checked ? 'bg-[#4E7FFF]' : 'bg-[#DEE2E6]'}`}>
+          <span className={`absolute top-[3px] w-5 h-5 rounded-full bg-white shadow transition-transform ${checked ? 'translate-x-[22px]' : 'translate-x-[3px]'}`} />
         </span>
       ) : (
-        <ChevronRight className="w-4 h-4 text-[#ADB5BD]" strokeWidth={2} />
+        <ChevronRight className="w-5 h-5 text-[#CED4DA]" strokeWidth={1.5} />
       )}
     </button>
   );
 }
 
-/* ── 모바일 체크 아이템 (큰 터치 영역) ── */
+/* ── 모바일 체크 아이템 (사라민 스타일 체크마크) ── */
 function MobileCheckItem({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <button type="button" onClick={onChange} className="w-full flex items-center gap-3 py-3 px-1 cursor-pointer active:bg-[#F8F9FA] rounded-lg">
-      <span className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${checked ? 'bg-[#4E7FFF] border-[#4E7FFF]' : 'bg-white border-[#DEE2E6]'}`}>
-        {checked && (
-          <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="3 8 7 12 13 4" />
-          </svg>
-        )}
-      </span>
-      <span className={`text-sm ${checked ? 'text-[#212529] font-semibold' : 'text-[#495057]'}`}>{label}</span>
+    <button type="button" onClick={onChange} className="w-full flex items-center justify-between px-5 py-[14px] border-b border-[#F8F9FA] cursor-pointer active:bg-[#F8F9FA]">
+      <span className={`text-[15px] ${checked ? 'text-[#212529] font-semibold' : 'text-[#495057]'}`}>{label}</span>
+      {checked && (
+        <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#4E7FFF]" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="4 12 10 18 20 6" />
+        </svg>
+      )}
     </button>
   );
 }
