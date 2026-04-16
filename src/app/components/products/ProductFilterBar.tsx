@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ChevronDown, ChevronRight, Filter, Search, SlidersHorizontal, X, Zap } from 'lucide-react';
 import { CATEGORIES, PRODUCTS, SUPPLIERS } from '../../lib/products';
 
@@ -35,6 +36,7 @@ interface ProductFilterBarProps {
 }
 
 export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQuickOrderClick, activeChips = [], resultCount = 0 }: ProductFilterBarProps) {
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
   // 모바일 모달 안에서 임시 필터 상태
@@ -93,13 +95,39 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
       <div className="bg-white rounded-xl shadow-[0_1px_3px_rgba(0,0,0,0.04)] mb-4 overflow-hidden">
         {/* 검색바 */}
         <div className="flex items-center gap-2 px-4 sm:px-5 py-3 sm:py-3.5 border-b border-[#F1F3F5]">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 sm:left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+          {/* 모바일: 검색 페이지로 이동하는 버튼 */}
+          <button
+            type="button"
+            onClick={() => navigate('/products/search')}
+            className="sm:hidden flex-1 relative h-10 pl-10 pr-4 text-sm bg-[#F8F9FA] rounded-lg border border-transparent flex items-center text-left cursor-pointer"
+          >
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
+            {search ? (
+              <span className="text-[#212529] truncate">{search}</span>
+            ) : (
+              <span className="text-[#868E96]">의약품명·SKU·제약사 검색</span>
+            )}
+            {search && (
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => { e.stopPropagation(); onSearchChange(''); }}
+                aria-label="검색어 지우기"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-full bg-[#CED4DA] hover:bg-[#ADB5BD] cursor-pointer"
+              >
+                <X className="w-3 h-3 text-white" strokeWidth={3} />
+              </span>
+            )}
+          </button>
+
+          {/* 데스크톱: 실제 검색 입력 */}
+          <div className="hidden sm:block relative flex-1">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#868E96]" strokeWidth={2.5} />
             <input
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="의약품명·SKU·제약사 검색"
-              className={`w-full h-10 pl-9 sm:pl-10 ${search ? 'pr-10' : 'pr-4'} text-sm bg-[#F8F9FA] rounded-lg border border-transparent focus:bg-white focus:border-[#4E7FFF] focus:outline-none transition-colors`}
+              placeholder="의약품명·성분·SKU·제약사 검색"
+              className={`w-full h-10 pl-10 ${search ? 'pr-10' : 'pr-4'} text-sm bg-[#F8F9FA] rounded-lg border border-transparent focus:bg-white focus:border-[#4E7FFF] focus:outline-none transition-colors`}
             />
             {search && (
               <button

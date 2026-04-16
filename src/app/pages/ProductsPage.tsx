@@ -23,7 +23,8 @@ function ProductsPageInner() {
   const [params, setParams] = useSearchParams();
 
   const [sidebarOpen, setSidebarOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
-  const [filter, setFilter] = useState<FilterState>(EMPTY_FILTER);
+  const initialCategory = params.get('category');
+  const [filter, setFilter] = useState<FilterState>(() => initialCategory ? { ...EMPTY_FILTER, categories: [initialCategory] } : EMPTY_FILTER);
   const [search, setSearch] = useState(params.get('q') || '');
   const [sort, setSort] = useState<Sort>((params.get('sort') as Sort) || '인기순');
   const [view, setView] = useState<ViewMode>((params.get('view') as ViewMode) || 'list');
@@ -100,24 +101,40 @@ function ProductsPageInner() {
       <main className={`${sidebarOpen ? 'lg:ml-56' : 'lg:ml-0'} mt-14 p-4 sm:p-6 lg:p-8 transition-all duration-300`}>
         <div className="max-w-[1400px] mx-auto">
           {/* 페이지 헤더 */}
-          <div className="mb-4">
+          {/* 모바일 헤더: 심플 */}
+          <div className="mb-3 sm:hidden">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="text-base font-bold text-[#212529]">전체 상품 <span className="text-[#868E96] font-medium">{PRODUCTS.length}</span></h2>
+              <div className="flex items-center gap-1">
+                <button aria-label="발주서 작성" className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#F1F3F5] cursor-pointer">
+                  <FileText className="w-[18px] h-[18px] text-[#495057]" strokeWidth={2} />
+                </button>
+                <button aria-label="장바구니" className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#F1F3F5] cursor-pointer">
+                  <ShoppingCart className="w-[18px] h-[18px] text-[#495057]" strokeWidth={2} />
+                  {cartKindCount > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[16px] h-[16px] px-1 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartKindCount}</span>}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 데스크톱 헤더 */}
+          <div className="mb-4 hidden sm:block">
             <p className="text-xs text-[#868E96] mb-1">
               <button onClick={() => navigate('/1')} className="hover:underline cursor-pointer">의약품 구매</button>
               <span className="mx-1.5">/</span>
               <span>전체 상품</span>
             </p>
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-3">
+            <div className="flex items-end justify-between gap-3">
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-[#212529]">전체 상품</h2>
+                <h2 className="text-xl font-bold text-[#212529]">전체 상품</h2>
                 <p className="text-xs text-[#868E96] mt-0.5">등록된 {PRODUCTS.length}개 의약품 · 10개 제약사</p>
               </div>
               <div className="flex items-center gap-2">
-                <button className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
+                <button className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
                   <FileText className="w-3.5 h-3.5" strokeWidth={2.5} />
-                  <span className="hidden sm:inline">발주서 작성</span>
-                  <span className="sm:hidden">발주서</span>
+                  발주서 작성
                 </button>
-                <button className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
+                <button className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
                   <ShoppingCart className="w-3.5 h-3.5" strokeWidth={2.5} />
                   장바구니
                   {cartKindCount > 0 && <span className="px-1.5 py-0.5 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full">{cartKindCount}</span>}
