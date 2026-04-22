@@ -22,16 +22,16 @@ const menuSections: MenuSection[] = [
   {
     title: '거래처 관리',
     items: [
-      { name: '거래 신청 내역' },
-      { name: '승인된 공급사' },
+      { name: '거래 신청 내역', path: '/partners/requests' },
+      { name: '승인된 공급사', path: '/partners/approved' },
     ]
   },
   {
     title: '의약품 구매',
     items: [
       { name: '전체 상품', path: '/products' },
-      { name: '장바구니' },
-      { name: '주문 내역' },
+      { name: '장바구니', path: '/cart' },
+      { name: '주문 내역', path: '/orders' },
     ]
   },
   {
@@ -44,16 +44,17 @@ const menuSections: MenuSection[] = [
   {
     title: '결제 관리',
     items: [
-      { name: '결제 내역' },
-      { name: '미결제 내역' },
-      { name: '결제수단 관리' },
+      { name: '결제 진행', path: '/checkout' },
+      { name: '결제 내역', path: '/payments/history' },
+      { name: '미결제 내역', path: '/payments/unpaid' },
+      { name: '결제수단 관리', path: '/payments/methods' },
     ]
   },
   {
     title: '장부·반품관리',
     items: [
-      { name: '구매 장부' },
-      { name: '반품 신청' },
+      { name: '구매 장부', path: '/ledger/purchases' },
+      { name: '반품 신청', path: '/returns' },
     ]
   },
   {

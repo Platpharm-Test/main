@@ -128,7 +128,7 @@ function ProductsPageInner() {
                   <FileText className="w-3.5 h-3.5" strokeWidth={2.5} />
                   발주서 작성
                 </button>
-                <button className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
+                <button onClick={() => navigate('/cart')} className="h-9 px-3 rounded-lg border border-[#DEE2E6] bg-white text-xs font-semibold text-[#495057] hover:border-[#CED4DA] inline-flex items-center gap-1.5 cursor-pointer">
                   <ShoppingCart className="w-3.5 h-3.5" strokeWidth={2.5} />
                   장바구니
                   {cartKindCount > 0 && <span className="px-1.5 py-0.5 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full">{cartKindCount}</span>}

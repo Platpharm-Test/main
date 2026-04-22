@@ -4,7 +4,11 @@ import { CleanBarChart } from '../components/CleanBarChart';
 import { CleanTable } from '../components/CleanTable';
 import { StatCard } from '../components/StatCard';
 import { CompanyList } from '../components/CompanyList';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { useCart } from '../lib/cart';
+
+const isDesktop = () => typeof window !== 'undefined' && window.innerWidth >= 1024;
 
 function getGreeting() {
   const hour = new Date().getHours();
@@ -15,11 +19,21 @@ function getGreeting() {
 }
 
 export default function Dashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(isDesktop);
+  const navigate = useNavigate();
+  const { cartKindCount } = useCart();
+
+  useEffect(() => {
+    const handler = () => {
+      if (!isDesktop()) setSidebarOpen(false);
+    };
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
-      <CleanHeader />
+      <CleanHeader onMenuClick={() => setSidebarOpen(!sidebarOpen)} menuOpen={sidebarOpen} cartCount={cartKindCount} />
       <CleanSidebar collapsed={!sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main Content */}
@@ -34,7 +48,7 @@ export default function Dashboard() {
                 <span className="px-2.5 py-1 bg-[#EDF2FF] text-[#4E7FFF] text-xs font-semibold rounded">개국약사</span>
               </div>
             </div>
-            <button className="px-5 py-2.5 bg-[#4E7FFF] text-white text-sm font-semibold rounded-lg hover:bg-[#3D6FEF] transition-colors">
+            <button onClick={() => navigate('/products')} className="px-5 py-2.5 bg-[#4E7FFF] text-white text-sm font-semibold rounded-lg hover:bg-[#3D6FEF] transition-colors cursor-pointer">
               의약품 주문하기
             </button>
           </div>
@@ -47,24 +61,28 @@ export default function Dashboard() {
               sublabel="승인된 공급사"
               highlight={true}
               description="신규 신청 대기 3건"
+              onClick={() => navigate('/partners')}
             />
             <StatCard
               label="의약품 구매"
               value="156"
               sublabel="이번 달 주문"
               description="배송 중 8건"
+              onClick={() => navigate('/products')}
             />
             <StatCard
               label="결제 관리"
               value="₩2.48억"
               sublabel="이번 달 결제액"
               description="미결제 ₩1,245만"
+              onClick={() => navigate('/payments')}
             />
             <StatCard
               label="장부·반품관리"
               value="12"
               sublabel="반품 신청 중"
               description="승인 대기 5건"
+              onClick={() => navigate('/ledger')}
             />
           </div>
 

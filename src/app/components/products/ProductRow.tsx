@@ -67,7 +67,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
             </button>
           ) : (
             <div className="relative">
-              <button onClick={() => { onAddToCart(qty); setQty(product.moq); }} className="h-8 px-4 rounded border border-[#4E7FFF] text-[#4E7FFF] hover:bg-[#4E7FFF] hover:text-white text-xs font-semibold transition-colors cursor-pointer">담기</button>
+              <button onClick={() => { onAddToCart(qty); setQty(product.moq); }} className="h-8 px-4 rounded border border-[#4E7FFF] text-[#4E7FFF] hover:bg-[#4E7FFF] hover:text-white text-xs font-semibold transition-colors cursor-pointer inline-flex items-center justify-center leading-none">담기</button>
               {cartQty > 0 && <span className="absolute -top-2 -right-2 min-w-[18px] h-[18px] px-1 bg-[#4E7FFF] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartQty}</span>}
             </div>
           )}
@@ -103,7 +103,7 @@ export function ProductRow({ product, cartQty = 0, onAddToCart, onClick }: Produ
                 <button onClick={() => setQty(qty + 1)} className="w-6 h-full flex items-center justify-center text-[#868E96] cursor-pointer"><Plus className="w-3 h-3" strokeWidth={2.5} /></button>
               </div>
               <div className="relative">
-                <button onClick={() => { onAddToCart(qty); setQty(product.moq); }} className="h-7 px-3 rounded border border-[#4E7FFF] text-[#4E7FFF] text-[11px] font-semibold cursor-pointer">담기</button>
+                <button onClick={() => { onAddToCart(qty); setQty(product.moq); }} className="h-7 px-3 rounded border border-[#4E7FFF] text-[#4E7FFF] text-[11px] font-semibold cursor-pointer inline-flex items-center justify-center leading-none">담기</button>
                 {cartQty > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-0.5 bg-[#4E7FFF] text-white text-[9px] font-bold rounded-full flex items-center justify-center">{cartQty}</span>}
               </div>
             </div>
