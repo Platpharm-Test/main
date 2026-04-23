@@ -60,7 +60,7 @@ export function CleanHeader({ onMenuClick, menuOpen, cartCount = 0 }: CleanHeade
   return (
     <header className="h-14 bg-[#2B2D31] border-b border-[#1A1C1F] flex items-center px-4 sm:px-6 fixed top-0 left-0 right-0 z-50">
       <div className="flex items-center justify-between w-full">
-        <button onClick={() => navigate('/1')} aria-label="대시보드로 이동" className="cursor-pointer">
+        <button onClick={() => navigate('/')} aria-label="대시보드로 이동" className="cursor-pointer">
           <img src="/Logo.png" alt="PlatPharm" className="h-6 sm:h-7 brightness-0 invert" />
         </button>
         <div className="flex items-center gap-2 sm:gap-3">

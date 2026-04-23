@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronsLeft, ChevronsRight, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
 interface MenuItem {
@@ -16,14 +16,15 @@ const menuSections: MenuSection[] = [
   {
     title: '대시보드',
     items: [
-      { name: '전체 현황', path: '/1' },
+      { name: '전체 현황', path: '/' },
     ]
   },
   {
     title: '거래처 관리',
     items: [
+      { name: '제약사 목록', path: '/partners' },
       { name: '거래 신청 내역', path: '/partners/requests' },
-      { name: '승인된 공급사', path: '/partners/approved' },
+      { name: '승인된 거래처', path: '/partners/approved' },
     ]
   },
   {
@@ -71,11 +72,23 @@ export function CleanSidebar({ collapsed, onToggle }: { collapsed: boolean; onTo
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>({
-    0: true,
-    1: true,
-    2: true,
+  // 현재 경로가 속한 섹션 인덱스
+  const activeSectionIndex = menuSections.findIndex((section) =>
+    section.items.some((item) => !!item.path && (currentPath === item.path || currentPath.startsWith(item.path + '/'))),
+  );
+
+  const [expandedSections, setExpandedSections] = useState<Record<number, boolean>>(() => {
+    const init: Record<number, boolean> = { 0: true, 1: true, 2: true };
+    if (activeSectionIndex >= 0) init[activeSectionIndex] = true;
+    return init;
   });
+
+  // 경로 변경 시 해당 섹션 자동 펼침 (유지)
+  useEffect(() => {
+    if (activeSectionIndex >= 0) {
+      setExpandedSections((prev) => (prev[activeSectionIndex] ? prev : { ...prev, [activeSectionIndex]: true }));
+    }
+  }, [activeSectionIndex]);
 
   const toggleSection = (index: number) => {
     setExpandedSections(prev => ({ ...prev, [index]: !prev[index] }));

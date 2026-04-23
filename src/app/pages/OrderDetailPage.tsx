@@ -8,7 +8,7 @@ import { PRODUCTS } from '../lib/products';
 export default function OrderDetailPage() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
-  const { orders, markPaid } = useOrders();
+  const { orders, markPaid, cancelOrder } = useOrders();
   const order = orders.find((o) => o.id === id);
 
   if (!order) {
@@ -111,10 +111,21 @@ export default function OrderDetailPage() {
             <span className="text-sm font-semibold text-[#212529]">총 결제 금액</span>
             <span className="text-lg font-bold tabular-nums text-[#4E7FFF]">₩{order.total.toLocaleString()}</span>
           </div>
-          {!order.paid && (
+          {!order.paid && order.status !== '주문취소' && (
             <button onClick={() => markPaid(order.id)} className="w-full h-11 rounded-lg bg-[#4E7FFF] hover:bg-[#3D6FEF] text-white text-sm font-semibold cursor-pointer">결제 완료 처리</button>
           )}
-          <button onClick={() => navigate('/returns')} className="w-full h-10 mt-2 rounded-lg border border-[#DEE2E6] hover:border-[#4E7FFF] text-[#495057] hover:text-[#4E7FFF] text-sm font-semibold cursor-pointer transition-colors">반품 신청</button>
+          {order.status === '주문취소' ? (
+            <button disabled className="w-full h-10 mt-2 rounded-lg border border-[#DEE2E6] bg-[#F8F9FA] text-[#ADB5BD] text-sm font-semibold cursor-not-allowed">취소된 주문입니다</button>
+          ) : order.status === '상품준비중' || !order.paid ? (
+            <button
+              onClick={() => cancelOrder(order.id)}
+              className="w-full h-10 mt-2 rounded-lg border border-[#DEE2E6] hover:border-[#4E7FFF] text-[#495057] hover:text-[#4E7FFF] text-sm font-semibold cursor-pointer transition-colors"
+            >
+              주문 취소
+            </button>
+          ) : (
+            <button onClick={() => navigate('/returns')} className="w-full h-10 mt-2 rounded-lg border border-[#DEE2E6] hover:border-[#4E7FFF] text-[#495057] hover:text-[#4E7FFF] text-sm font-semibold cursor-pointer transition-colors">반품 신청</button>
+          )}
         </aside>
       </div>
     </PageShell>

@@ -114,7 +114,7 @@ function ProductsPageInner() {
           {/* 데스크톱 헤더 */}
           <div className="mb-4 hidden lg:block">
             <p className="text-xs text-[#868E96] mb-1">
-              <button onClick={() => navigate('/1')} className="hover:underline cursor-pointer">의약품 구매</button>
+              <button onClick={() => navigate('/')} className="hover:underline cursor-pointer">의약품 구매</button>
               <span className="mx-1.5">/</span>
               <span>전체 상품</span>
             </p>

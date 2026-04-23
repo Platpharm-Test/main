@@ -33,9 +33,10 @@ interface ProductFilterBarProps {
   onQuickOrderClick: () => void;
   activeChips?: ActiveChip[];
   resultCount?: number;
+  hideSuppliers?: boolean;
 }
 
-export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQuickOrderClick, activeChips = [], resultCount = 0 }: ProductFilterBarProps) {
+export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQuickOrderClick, activeChips = [], resultCount = 0, hideSuppliers = false }: ProductFilterBarProps) {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<string | null>(null);
@@ -184,17 +185,19 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
 
         {/* 데스크톱: 기존 필터 행 */}
         <div className="hidden lg:block">
-          <Row label="카테고리" collapsible>
+          <Row label="카테고리" collapsible forceExpanded={filter.categories.length > 0}>
             {CATEGORIES.map((c) => (
               <CheckItem key={c} label={c} checked={filter.categories.includes(c)} onChange={() => toggle('categories', c)} />
             ))}
           </Row>
 
-          <Row label="제약사" collapsible>
-            {SUPPLIERS.map((s) => (
-              <CheckItem key={s} label={s} checked={filter.suppliers.includes(s)} onChange={() => toggle('suppliers', s)} />
-            ))}
-          </Row>
+          {!hideSuppliers && (
+            <Row label="제약사" collapsible forceExpanded={filter.suppliers.length > 0}>
+              {SUPPLIERS.map((s) => (
+                <CheckItem key={s} label={s} checked={filter.suppliers.includes(s)} onChange={() => toggle('suppliers', s)} />
+              ))}
+            </Row>
+          )}
 
           <div className="flex items-center justify-between gap-4 px-5 py-3.5 border-b border-[#F1F3F5] last:border-b-0">
             <div className="flex items-start gap-4">
@@ -259,7 +262,7 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
           {!mobileSection ? (
             <div className="py-2">
               <MobileFilterRow label="카테고리" count={draft.categories.length} onClick={() => setMobileSection('categories')} />
-              <MobileFilterRow label="제약사" count={draft.suppliers.length} onClick={() => setMobileSection('suppliers')} />
+              {!hideSuppliers && <MobileFilterRow label="제약사" count={draft.suppliers.length} onClick={() => setMobileSection('suppliers')} />}
               <MobileFilterRow label="가격대" count={draft.priceMin > 0 || draft.priceMax !== EMPTY_FILTER.priceMax ? 1 : 0} onClick={() => setMobileSection('price')} />
               <MobileFilterRow label="품절 제외" count={0} onClick={() => setDraft({ ...draft, excludeSoldOut: !draft.excludeSoldOut })} toggle checked={draft.excludeSoldOut} />
             </div>
@@ -312,10 +315,11 @@ export function ProductFilterBar({ filter, onChange, search, onSearchChange, onQ
 }
 
 /* ── 데스크톱 Row ── */
-function Row({ label, children, collapsible = false }: { label: string; children: React.ReactNode; collapsible?: boolean }) {
-  const [expanded, setExpanded] = useState(false);
+function Row({ label, children, collapsible = false, forceExpanded = false }: { label: string; children: React.ReactNode; collapsible?: boolean; forceExpanded?: boolean }) {
+  const [userExpanded, setUserExpanded] = useState(false);
   const [overflows, setOverflows] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
+  const expanded = userExpanded || forceExpanded;
 
   useEffect(() => {
     if (!collapsible || !contentRef.current) return;
@@ -339,7 +343,11 @@ function Row({ label, children, collapsible = false }: { label: string; children
         {children}
       </div>
       {collapsible && overflows && (
-        <button onClick={() => setExpanded((v) => !v)} className="shrink-0 flex items-center gap-0.5 text-xs text-[#868E96] hover:text-[#495057] pt-2 cursor-pointer whitespace-nowrap">
+        <button
+          onClick={() => setUserExpanded((v) => !v)}
+          disabled={forceExpanded && !userExpanded}
+          className="shrink-0 flex items-center gap-0.5 text-xs text-[#868E96] hover:text-[#495057] pt-2 cursor-pointer whitespace-nowrap disabled:cursor-default disabled:opacity-60"
+        >
           {expanded ? '접기' : '펼치기'}
           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} strokeWidth={2.5} />
         </button>

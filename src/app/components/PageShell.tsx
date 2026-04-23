@@ -25,7 +25,7 @@ export function PageShell({ title, description, actions, children }: PageShellPr
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#F5F6F8]">
       <CleanHeader
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
         menuOpen={sidebarOpen}

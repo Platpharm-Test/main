@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 
-export type OrderStatus = '상품준비중' | '배송준비' | '배송중' | '배송완료' | '취소';
+export type OrderStatus = '상품준비중' | '배송준비' | '배송중' | '배송완료' | '주문취소';
 
 export interface OrderLine {
   productId: number;
@@ -26,6 +26,7 @@ interface OrdersContextValue {
   orders: Order[];
   addOrder: (order: Order) => void;
   markPaid: (orderId: string) => void;
+  cancelOrder: (orderId: string) => void;
 }
 
 const OrdersContext = createContext<OrdersContextValue | null>(null);
@@ -57,10 +58,11 @@ const SEED_ORDERS: Order[] = [
   },
 ];
 
-const VALID_STATUSES: OrderStatus[] = ['상품준비중', '배송준비', '배송중', '배송완료', '취소'];
+const VALID_STATUSES: OrderStatus[] = ['상품준비중', '배송준비', '배송중', '배송완료', '주문취소'];
 function migrate(o: Order): Order {
   const legacy = o.status as unknown as string;
   if (VALID_STATUSES.includes(o.status)) return o;
+  if (legacy === '취소') return { ...o, status: '주문취소' };
   if (legacy === '결제완료') return { ...o, status: '상품준비중' };
   if (legacy === '결제대기') return { ...o, status: '상품준비중', paid: false };
   return { ...o, status: '상품준비중' };
@@ -90,8 +92,12 @@ export function OrdersProvider({ children }: { children: ReactNode }) {
     setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, paid: true } : o)));
   }, []);
 
+  const cancelOrder = useCallback((orderId: string) => {
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: '주문취소' } : o)));
+  }, []);
+
   return (
-    <OrdersContext.Provider value={{ orders, addOrder, markPaid }}>
+    <OrdersContext.Provider value={{ orders, addOrder, markPaid, cancelOrder }}>
       {children}
     </OrdersContext.Provider>
   );

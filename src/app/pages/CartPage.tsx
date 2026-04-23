@@ -40,7 +40,7 @@ export default function CartPage() {
           <button onClick={() => navigate('/products')} className="h-10 px-5 rounded-lg bg-[#4E7FFF] hover:bg-[#3D6FEF] text-white text-sm font-semibold cursor-pointer">상품 보러가기</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] items-start gap-4">
           <div className="rounded-lg border border-[#DEE2E6] bg-white overflow-hidden">
             {lines.map(({ product, qty }) => {
               const lineTotal = product.unitPrice * product.packSize * qty;

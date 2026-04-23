@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { Building2, Check, ChevronDown, ChevronRight, CreditCard, Wallet } from 'lucide-react';
+import { Building2, Check, ChevronDown, ChevronRight, CreditCard, Pencil, Wallet } from 'lucide-react';
+import { useDeliveryAddress } from '../lib/addressContext';
 import { PageShell } from '../components/PageShell';
 import { useCart } from '../lib/cart';
 import { useOrders, type Order } from '../lib/orders';
@@ -36,7 +37,7 @@ const MEMO_PRESETS = [
 
 const DEFAULT_ADDRESS = {
   name: '서울연세약국',
-  recipient: '조정건 약사',
+  recipient: '김민수',
   phone: '010-1234-5678',
   zip: '03161',
   line1: '서울특별시 종로구 종로 1길 50',
@@ -78,6 +79,7 @@ export default function CheckoutPage() {
   const { cart, setCart } = useCart();
   const { addOrder } = useOrders();
 
+  const { selected: address } = useDeliveryAddress();
   const [payType, setPayType] = useState<PayType>('money');
   const [cardId, setCardId] = useState<string>(REGISTERED_CARDS.find((c) => c.isDefault)?.id ?? REGISTERED_CARDS[0].id);
   const [cardInstallment, setCardInstallment] = useState('일시불');
@@ -167,17 +169,23 @@ export default function CheckoutPage() {
             <section className="rounded-lg border border-[#DEE2E6] bg-white p-5">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-bold text-[#212529]">배송지</h2>
-                <button className="inline-flex items-center gap-1 h-8 px-3 rounded-lg border border-[#DEE2E6] text-xs font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] cursor-pointer">
-                  배송지 변경 <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} />
+                <button
+                  onClick={() => navigate('/address/edit')}
+                  className="inline-flex items-center gap-1 h-8 px-3 rounded-lg border border-[#DEE2E6] text-xs font-semibold text-[#495057] hover:border-[#4E7FFF] hover:text-[#4E7FFF] cursor-pointer"
+                >
+                  <Pencil className="w-3 h-3" strokeWidth={2.5} />
+                  배송지 변경
                 </button>
               </div>
               <div className="flex items-start gap-2 mb-1">
                 <span className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#EDF2FF] text-[#4E7FFF]">기본</span>
-                <p className="text-sm font-semibold text-[#212529]">{DEFAULT_ADDRESS.name}</p>
+                <p className="text-sm font-semibold text-[#212529]">{address.name}</p>
               </div>
-              <p className="text-xs text-[#495057]">{DEFAULT_ADDRESS.recipient} · {DEFAULT_ADDRESS.phone}</p>
-              <p className="text-xs text-[#495057] mt-0.5">({DEFAULT_ADDRESS.zip}) {DEFAULT_ADDRESS.line1}</p>
-              <p className="text-xs text-[#495057]">{DEFAULT_ADDRESS.line2}</p>
+              <p className="text-xs text-[#495057]">{address.recipient} · {address.phone}</p>
+              <p className="text-xs text-[#495057] mt-0.5">({address.zip}) {address.line1}</p>
+              {address.line2 && (
+                <p className="text-xs text-[#495057]">{address.line2}</p>
+              )}
             </section>
 
             {/* 2. 배송 메모 */}
@@ -378,9 +386,11 @@ export default function CheckoutPage() {
                               <div className="flex items-center gap-2 mb-2">
                                 <span className="inline-block w-7 h-4 rounded-sm" style={{ background: c.color }} />
                                 <span className="text-[11px] font-bold text-[#495057]">{c.brand}</span>
-                                {c.isDefault && <span className="ml-auto text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#EDF2FF] text-[#4E7FFF]">기본</span>}
                               </div>
-                              <p className="text-xs font-semibold text-[#212529] leading-tight">{c.label}</p>
+                              <div className="flex items-center gap-1.5">
+                                <p className="text-xs font-semibold text-[#212529] leading-tight">{c.label}</p>
+                                {c.isDefault && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#EDF2FF] text-[#4E7FFF]">기본</span>}
+                              </div>
                               <p className="text-[11px] text-[#868E96] tabular-nums mt-0.5">**** {c.last4}</p>
                               {active && (
                                 <Check className="absolute top-2 right-2 w-3.5 h-3.5 text-[#4E7FFF]" strokeWidth={3} />

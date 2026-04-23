@@ -7,6 +7,7 @@ import { PRODUCTS, STOCK_DOT, STOCK_LABEL_COLOR, type Product } from '../lib/pro
 import { ProductImage } from '../components/products/ProductImage';
 import { ToastProvider, useToast } from '../components/ui/Toast';
 import { useCart } from '../lib/cart';
+import { getSupplierByName } from '../lib/partners';
 
 function ProductDetailInner() {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +68,7 @@ function ProductDetailInner() {
           {/* 브레드크럼 + 뒤로가기 */}
           <div className="mb-5">
             <p className="text-xs text-[#868E96] mb-2">
-              <button onClick={() => navigate('/1')} className="hover:underline cursor-pointer">홈</button>
+              <button onClick={() => navigate('/')} className="hover:underline cursor-pointer">홈</button>
               <span className="mx-1.5">/</span>
               <button onClick={() => navigate('/products')} className="hover:underline cursor-pointer">전체 상품</button>
               <span className="mx-1.5">/</span>
@@ -126,7 +127,19 @@ function ProductDetailInner() {
                       </div>
                     </div>
                     <h1 className="text-xl font-bold text-[#212529] mb-1">{product.name}</h1>
-                    <p className="text-sm text-[#868E96] mb-4">{product.supplier}</p>
+                    {(() => {
+                      const sup = getSupplierByName(product.supplier);
+                      return sup ? (
+                        <button
+                          onClick={() => navigate(`/partners/${sup.id}`)}
+                          className="block text-left text-sm text-[#868E96] mb-4 cursor-pointer"
+                        >
+                          {product.supplier}
+                        </button>
+                      ) : (
+                        <p className="text-sm text-[#868E96] mb-4">{product.supplier}</p>
+                      );
+                    })()}
 
                     <div className="grid grid-cols-2 gap-3">
                       <InfoCell label="제형" value={product.form} />
@@ -235,8 +248,8 @@ function ProductDetailInner() {
         </div>
       </main>
 
-      {/* 모바일: 하단 고정 액션 바 */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#E9ECEF] px-4 py-3">
+      {/* 모바일: 하단 고정 액션 바 — 메뉴 위에 항상 노출 */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-[#E9ECEF] px-4 py-3">
         {disabled ? (
           <div className="flex items-center gap-3">
             <button

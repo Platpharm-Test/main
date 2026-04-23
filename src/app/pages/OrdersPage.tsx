@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import { Check, ChevronDown, ChevronRight, Package } from 'lucide-react';
 import { PageShell } from '../components/PageShell';
@@ -6,7 +6,7 @@ import { ProductImage } from '../components/products/ProductImage';
 import { useOrders, type OrderStatus, type Order } from '../lib/orders';
 import { PRODUCTS } from '../lib/products';
 
-const FILTERS: (OrderStatus | '전체')[] = ['전체', '상품준비중', '배송준비', '배송중', '배송완료', '취소'];
+const FILTERS: (OrderStatus | '전체')[] = ['전체', '상품준비중', '배송준비', '배송중', '배송완료', '주문취소'];
 
 function statusBadgeClass(s: OrderStatus) {
   switch (s) {
@@ -14,7 +14,7 @@ function statusBadgeClass(s: OrderStatus) {
     case '배송준비': return 'bg-[#FFF9DB] text-[#B27700]';
     case '배송중': return 'bg-[#E7F5FF] text-[#1971C2]';
     case '배송완료': return 'bg-[#EDF2FF] text-[#4E7FFF]';
-    case '취소': return 'bg-[#F1F3F5] text-[#868E96]';
+    case '주문취소': return 'bg-[#F1F3F5] text-[#868E96]';
   }
 }
 
@@ -24,7 +24,7 @@ function statusTextColor(s: OrderStatus) {
     case '배송준비': return '#F08C00';
     case '배송중': return '#1971C2';
     case '배송완료': return '#2F9E44';
-    case '취소': return '#868E96';
+    case '주문취소': return '#868E96';
   }
 }
 
@@ -56,7 +56,7 @@ export default function OrdersPage() {
     '배송준비': orders.filter((o) => o.status === '배송준비').length,
     '배송중': orders.filter((o) => o.status === '배송중').length,
     '배송완료': orders.filter((o) => o.status === '배송완료').length,
-    '취소': orders.filter((o) => o.status === '취소').length,
+    '주문취소': orders.filter((o) => o.status === '주문취소').length,
   };
 
   return (
@@ -132,21 +132,21 @@ function OrderCard({ order, onOpen }: { order: Order; onOpen: () => void }) {
       </header>
 
       <div className="px-5 pb-4">
-        <ul className="space-y-2.5">
+        <ul className="divide-y divide-[#F1F3F5]">
           {visible.map((l) => {
             const prod = PRODUCTS.find((p) => p.id === l.productId);
             const lineTotal = l.unitPrice * l.packSize * l.qty;
             return (
-              <li key={l.productId} className="flex items-center gap-3">
-                <button onClick={onOpen} aria-label={`${l.name} 주문 상세`} className="shrink-0 cursor-pointer">
+              <li key={l.productId} className="flex items-center gap-3 py-3">
+                <Link to={`/products/${l.productId}`} aria-label={`${l.name} 상세`} className="shrink-0 cursor-pointer">
                   {prod ? (
                     <ProductImage form={prod.form} category={prod.category} name={prod.name} code={prod.code} image={prod.image} size="sm" />
                   ) : (
                     <div className="w-10 h-10 rounded bg-[#F1F3F5]" />
                   )}
-                </button>
+                </Link>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-[#212529] truncate">{l.name}</p>
+                  <Link to={`/products/${l.productId}`} className="text-sm font-semibold text-[#212529] truncate cursor-pointer block">{l.name}</Link>
                   <p className="text-[11px] text-[#868E96]">{l.supplier} · {l.qty}개</p>
                 </div>
                 <p className="text-sm font-semibold tabular-nums text-[#495057] shrink-0">₩{lineTotal.toLocaleString()}</p>
